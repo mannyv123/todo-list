@@ -1,60 +1,18 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 import TaskList from "./components/TaskList/TaskList";
-
-export interface Task {
-    id: number;
-    task: string;
-    completed: boolean;
-    timestamp: number;
-}
-
-//temp data
-const tasks: Task[] = [
-    {
-        id: 1,
-        task: "Task 1",
-        completed: false,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 2,
-        task: "Task 2",
-        completed: false,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 3,
-        task: "Task 3",
-        completed: true,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 4,
-        task: "Task 4",
-        completed: true,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 5,
-        task: "Task 5",
-        completed: true,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 6,
-        task: "Task 6",
-        completed: false,
-        timestamp: 1691722357505,
-    },
-    {
-        id: 7,
-        task: "Task 7",
-        completed: true,
-        timestamp: 1691722357505,
-    },
-];
+import { getTasks } from "./utils/api";
+import { Task } from "./utils/types";
 
 function App() {
+    const [tasks, setTasks] = useState<Task[]>([]);
+
+    useEffect(() => {
+        getTasks()
+            .then((data) => setTasks(data))
+            .catch((error) => console.error(`Error fetching tasks: ${error}`));
+    }, []);
+
     return (
         <main className="mx-auto max-w-7xl p-4">
             <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">

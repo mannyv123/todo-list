@@ -1,11 +1,11 @@
-import { Task } from "../../App";
+import { Task } from "../../utils/types";
 
 interface TaskProps {
     task: Task;
 }
 
 function TaskItem({ task }: TaskProps) {
-    const taskId = `task-${task.id}`; // Unique ID for the input element
+    const taskId = `task-${task._id}`; // Unique ID for the input element
 
     return (
         <div className="flex gap-4">

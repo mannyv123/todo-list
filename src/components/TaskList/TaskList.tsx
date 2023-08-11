@@ -1,4 +1,4 @@
-import { Task } from "../../App";
+import { Task } from "../../utils/types";
 import TaskItem from "../TaskItem/TaskItem";
 
 interface TaskListProps {
@@ -15,7 +15,7 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">To Do</h3>
                 <ul>
                     {uncompletedTasks.map((task) => (
-                        <li key={task.id}>
+                        <li key={task._id}>
                             <TaskItem task={task} />
                         </li>
                     ))}
@@ -25,7 +25,7 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">Done</h3>
                 <ul>
                     {completedTasks.map((task) => (
-                        <li key={task.id}>
+                        <li key={task._id}>
                             <TaskItem task={task} />
                         </li>
                     ))}
