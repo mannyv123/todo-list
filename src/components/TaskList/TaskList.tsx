@@ -8,7 +8,10 @@ interface TaskListProps {
 
 function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
     const uncompletedTasks = tasks.filter((task) => task.completed === false);
-    const completedTasks = tasks.filter((task) => task.completed === true);
+    const completedTasks = tasks
+        .filter((task) => task.completed === true)
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+        .slice(0, 10);
 
     return (
         <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40">
@@ -30,6 +33,7 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
                             <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
+                    {completedTasks.length >= 10 && <li>...</li>}
                 </ul>
             </div>
         </section>
