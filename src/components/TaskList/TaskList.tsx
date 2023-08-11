@@ -1,11 +1,12 @@
-import { Task } from "../../App";
+import { Task } from "../../utils/types";
 import TaskItem from "../TaskItem/TaskItem";
 
 interface TaskListProps {
     tasks: Task[];
+    handleTaskCompletionChange: (taskId: string) => void;
 }
 
-function TaskList({ tasks }: TaskListProps) {
+function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
     const uncompletedTasks = tasks.filter((task) => task.completed === false);
     const completedTasks = tasks.filter((task) => task.completed === true);
 
@@ -15,8 +16,8 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">To Do</h3>
                 <ul>
                     {uncompletedTasks.map((task) => (
-                        <li key={task.id}>
-                            <TaskItem task={task} />
+                        <li key={task._id}>
+                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
                 </ul>
@@ -25,8 +26,8 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">Done</h3>
                 <ul>
                     {completedTasks.map((task) => (
-                        <li key={task.id}>
-                            <TaskItem task={task} />
+                        <li key={task._id}>
+                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
                 </ul>
