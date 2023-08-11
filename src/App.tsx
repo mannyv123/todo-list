@@ -1,22 +1,23 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import "./App.css";
-import TaskList from "./components/TaskList/TaskList";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { addTask, getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
+import TaskList from "./components/TaskList/TaskList";
 import DeleteModal from "./components/DeleteModal/DeleteModal";
 
 function App() {
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [newTask, setNewTask] = useState<string>("");
-    const [searchInput, setSearchInput] = useState<string>("");
+    const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
+    const [newTask, setNewTask] = useState<string>(""); //tracks new task input
+    const [searchInput, setSearchInput] = useState<string>(""); //tracks search input
 
+    //Ref for modal to delete tasks
     const deleteModalRef = useRef<HTMLDialogElement>(null);
 
     //Load tasks on mount
     useEffect(() => {
         getTasks()
             .then((data) => setTasks(data))
-            .catch((error) => console.error(`Error fetching tasks: ${error}`));
+            .catch((err) => console.error(`Error fetching tasks: ${err}`));
     }, []);
 
     //Handle search input
@@ -35,8 +36,8 @@ function App() {
             await updateTask(taskId);
             const updatedTasks = await getTasks();
             setTasks(updatedTasks);
-        } catch (error) {
-            console.error(`Error updating task: ${error}`);
+        } catch (err) {
+            console.error(`Error updating task: ${err}`);
         }
     };
 
@@ -54,8 +55,8 @@ function App() {
             const updatedTasks = await getTasks();
             setTasks(updatedTasks);
             setNewTask("");
-        } catch (error) {
-            console.error(`Error submitting new task: ${error}`);
+        } catch (err) {
+            console.error(`Error submitting new task: ${err}`);
         }
     };
 
@@ -64,6 +65,7 @@ function App() {
         if (searchInput === "") {
             return task;
         }
+
         const lowerCasedSearch = searchInput.toLowerCase();
         const taskContent = task.task.toLowerCase();
 
