@@ -10,8 +10,7 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
     const uncompletedTasks = tasks.filter((task) => task.completed === false);
     const completedTasks = tasks
         .filter((task) => task.completed === true)
-        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-        .slice(0, 10);
+        .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
     return (
         <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40">
@@ -28,7 +27,7 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
             <div className="w-full md:w-1/2">
                 <h3 className="border-b border-black">Done</h3>
                 <ul>
-                    {completedTasks.map((task) => (
+                    {completedTasks.slice(0, 10).map((task) => (
                         <li key={task._id}>
                             <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
