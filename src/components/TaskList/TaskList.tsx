@@ -33,7 +33,7 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
                             <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
-                    {completedTasks.length >= 10 && <li>...</li>}
+                    {completedTasks.length > 10 && <li>...</li>}
                 </ul>
             </div>
         </section>
