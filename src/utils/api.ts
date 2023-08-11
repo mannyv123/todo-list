@@ -29,3 +29,26 @@ export const updateTask = async (taskId: string) => {
         throw new Error(`Error updating task: ${err}`);
     }
 };
+
+//Add new task
+export const addTask = async (task: string) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}`, {
+            method: "POST",
+            body: JSON.stringify({
+                task,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error creating task: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (err) {
+        throw new Error(`Error creating task: ${err}`);
+    }
+};

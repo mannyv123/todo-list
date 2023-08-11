@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import "./App.css";
 import TaskList from "./components/TaskList/TaskList";
-import { getTasks, updateTask } from "./utils/api";
+import { addTask, getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [newTask, setNewTask] = useState<string>("");
 
     //Load tasks on mount
     useEffect(() => {
@@ -25,6 +26,30 @@ function App() {
         }
     };
 
+    //Handle input for new task
+    const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTask(e.target.value);
+    };
+
+    //Handle new task submission
+    const handleFormSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+
+        //TODO: add form validation
+        if (newTask === "") {
+            return;
+        }
+
+        try {
+            await addTask(newTask);
+            const updatedTasks = await getTasks();
+            setTasks(updatedTasks);
+            setNewTask("");
+        } catch (error) {
+            console.error(`Error submitting new task: ${error}`);
+        }
+    };
+
     return (
         <main className="mx-auto max-w-7xl p-4">
             <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
@@ -32,13 +57,19 @@ function App() {
                 <p className="">Delete all tasks</p>
             </section>
             <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40 mb-12">
-                <form action="submit" className="w-full flex flex-col md:flex-row gap-1 md:gap-2">
+                <form
+                    action="submit"
+                    onSubmit={handleFormSubmit}
+                    className="w-full flex flex-col md:flex-row gap-1 md:gap-2"
+                >
                     <input
                         className="w-full border border-black rounded-md p-1"
                         placeholder="New task.."
                         type="text"
                         name="newTask"
                         id="newTask"
+                        onChange={handleTaskInput}
+                        value={newTask}
                     />
                     <button className="bg-cyan-300 rounded-md border border-black md:w-24">Add</button>
                 </form>
