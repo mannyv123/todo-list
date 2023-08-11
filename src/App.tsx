@@ -77,8 +77,11 @@ function App() {
             <DeleteModal deleteModalRef={deleteModalRef} tasks={tasks} setTasks={setTasks} />
             <div className="w-full h-full mx-auto max-w-7xl p-4">
                 <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
-                    <h1 className="">Marvelous v2.0</h1>
-                    <p onClick={() => deleteModalRef.current?.showModal()} className="cursor-pointer">
+                    <h1 className="font-bold text-lg md:text-3xl ">Marvelous v2.0</h1>
+                    <p
+                        onClick={() => deleteModalRef.current?.showModal()}
+                        className="cursor-pointer underline text-blue-500"
+                    >
                         Delete all tasks
                     </p>
                 </section>
@@ -89,7 +92,7 @@ function App() {
                         className="w-full flex flex-col md:flex-row gap-1 md:gap-2"
                     >
                         <input
-                            className="w-full border border-black rounded-md p-1"
+                            className="w-full border border-black rounded-md p-2"
                             placeholder="New task.."
                             type="text"
                             name="newTask"
@@ -97,10 +100,12 @@ function App() {
                             onChange={handleTaskInput}
                             value={newTask}
                         />
-                        <button className="bg-cyan-300 rounded-md border border-black md:w-24">Add</button>
+                        <button className="bg-cyan-300 rounded-md border border-black md:w-24 p-1">
+                            Add
+                        </button>
                     </form>
                     <input
-                        className="w-full border border-black rounded-md p-1"
+                        className="w-full border border-black rounded-md p-2"
                         placeholder="Search.."
                         type="text"
                         name="search"
