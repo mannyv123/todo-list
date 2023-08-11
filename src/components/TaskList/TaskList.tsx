@@ -3,9 +3,10 @@ import TaskItem from "../TaskItem/TaskItem";
 
 interface TaskListProps {
     tasks: Task[];
+    handleTaskCompletionChange: (taskId: string) => void;
 }
 
-function TaskList({ tasks }: TaskListProps) {
+function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
     const uncompletedTasks = tasks.filter((task) => task.completed === false);
     const completedTasks = tasks.filter((task) => task.completed === true);
 
@@ -16,7 +17,7 @@ function TaskList({ tasks }: TaskListProps) {
                 <ul>
                     {uncompletedTasks.map((task) => (
                         <li key={task._id}>
-                            <TaskItem task={task} />
+                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
                 </ul>
@@ -26,7 +27,7 @@ function TaskList({ tasks }: TaskListProps) {
                 <ul>
                     {completedTasks.map((task) => (
                         <li key={task._id}>
-                            <TaskItem task={task} />
+                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
                         </li>
                     ))}
                 </ul>

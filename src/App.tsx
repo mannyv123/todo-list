@@ -1,17 +1,29 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import TaskList from "./components/TaskList/TaskList";
-import { getTasks } from "./utils/api";
+import { getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
 
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
 
+    //Load tasks on mount
     useEffect(() => {
         getTasks()
             .then((data) => setTasks(data))
             .catch((error) => console.error(`Error fetching tasks: ${error}`));
     }, []);
+
+    //Handle task completion change
+    const handleTaskCompletionChange = async (taskId: string) => {
+        try {
+            await updateTask(taskId);
+            const updatedTasks = await getTasks();
+            setTasks(updatedTasks);
+        } catch (error) {
+            console.error(`Error updating task: ${error}`);
+        }
+    };
 
     return (
         <main className="mx-auto max-w-7xl p-4">
@@ -38,7 +50,7 @@ function App() {
                     id="search"
                 />
             </section>
-            <TaskList tasks={tasks} />
+            <TaskList tasks={tasks} handleTaskCompletionChange={handleTaskCompletionChange} />
         </main>
     );
 }
