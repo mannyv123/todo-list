@@ -52,3 +52,16 @@ export const addTask = async (task: string) => {
         throw new Error(`Error creating task: ${err}`);
     }
 };
+
+//Delete all tasks
+export const deleteAllTasks = async () => {
+    try {
+        const response = await fetch(`${API_BASE_URL}deleteAll`, {
+            method: "DELETE",
+        });
+
+        return await response.json();
+    } catch (err) {
+        throw new Error(`Error deleting tasks: ${err}`);
+    }
+};

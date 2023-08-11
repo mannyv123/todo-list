@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import "./App.css";
 import TaskList from "./components/TaskList/TaskList";
-import { addTask, getTasks, updateTask } from "./utils/api";
+import { addTask, deleteAllTasks, getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
 
 function App() {
@@ -50,11 +50,29 @@ function App() {
         }
     };
 
+    //Handle deleting all tasks
+    const handleDeleteAll = async () => {
+        //TODO: add validation if no tasks to delete
+        if (!tasks.length) {
+            console.log("No tasks to delete");
+            return;
+        }
+        try {
+            const response = await deleteAllTasks();
+            console.log(response.message);
+            setTasks([]);
+        } catch (error) {
+            console.error(`Error deleting all tasks: ${error}`);
+        }
+    };
+
     return (
         <main className="mx-auto max-w-7xl p-4">
             <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
                 <h1 className="">Marvelous v2.0</h1>
-                <p className="">Delete all tasks</p>
+                <p onClick={handleDeleteAll} className="cursor-pointer">
+                    Delete all tasks
+                </p>
             </section>
             <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40 mb-12">
                 <form
