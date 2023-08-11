@@ -1,4 +1,5 @@
 import { Task } from "../../App";
+import TaskItem from "../TaskItem/TaskItem";
 
 interface TaskListProps {
     tasks: Task[];
@@ -14,7 +15,9 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">To Do</h3>
                 <ul>
                     {uncompletedTasks.map((task) => (
-                        <p key={task.id}>{task.task}</p>
+                        <li key={task.id}>
+                            <TaskItem task={task} />
+                        </li>
                     ))}
                 </ul>
             </div>
@@ -22,7 +25,9 @@ function TaskList({ tasks }: TaskListProps) {
                 <h3 className="border-b border-black">Done</h3>
                 <ul>
                     {completedTasks.map((task) => (
-                        <p key={task.id}>{task.task}</p>
+                        <li key={task.id}>
+                            <TaskItem task={task} />
+                        </li>
                     ))}
                 </ul>
             </div>
