@@ -1,22 +1,24 @@
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import "./App.css";
-import TaskList from "./components/TaskList/TaskList";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { addTask, getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
+import TaskList from "./components/TaskList/TaskList";
 import DeleteModal from "./components/DeleteModal/DeleteModal";
 
 function App() {
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [newTask, setNewTask] = useState<string>("");
-    const [searchInput, setSearchInput] = useState<string>("");
+    const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
+    const [newTask, setNewTask] = useState<string>(""); //tracks new task input
+    const [searchInput, setSearchInput] = useState<string>(""); //tracks search input
+    const [isBlank, setIsBlank] = useState<boolean>(false);
 
+    //Ref for modal to delete tasks
     const deleteModalRef = useRef<HTMLDialogElement>(null);
 
     //Load tasks on mount
     useEffect(() => {
         getTasks()
             .then((data) => setTasks(data))
-            .catch((error) => console.error(`Error fetching tasks: ${error}`));
+            .catch((err) => console.error(`Error fetching tasks: ${err}`));
     }, []);
 
     //Handle search input
@@ -27,6 +29,9 @@ function App() {
     //Handle input for new task
     const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTask(e.target.value);
+        if (e.target.value) {
+            setIsBlank(false);
+        }
     };
 
     //Handle task completion change
@@ -35,8 +40,8 @@ function App() {
             await updateTask(taskId);
             const updatedTasks = await getTasks();
             setTasks(updatedTasks);
-        } catch (error) {
-            console.error(`Error updating task: ${error}`);
+        } catch (err) {
+            console.error(`Error updating task: ${err}`);
         }
     };
 
@@ -44,8 +49,8 @@ function App() {
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        //TODO: add form validation
         if (newTask === "") {
+            setIsBlank(true);
             return;
         }
 
@@ -54,8 +59,8 @@ function App() {
             const updatedTasks = await getTasks();
             setTasks(updatedTasks);
             setNewTask("");
-        } catch (error) {
-            console.error(`Error submitting new task: ${error}`);
+        } catch (err) {
+            console.error(`Error submitting new task: ${err}`);
         }
     };
 
@@ -64,6 +69,7 @@ function App() {
         if (searchInput === "") {
             return task;
         }
+
         const lowerCasedSearch = searchInput.toLowerCase();
         const taskContent = task.task.toLowerCase();
 
@@ -75,30 +81,45 @@ function App() {
             <DeleteModal deleteModalRef={deleteModalRef} tasks={tasks} setTasks={setTasks} />
             <div className="w-full h-full mx-auto max-w-7xl p-4">
                 <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
-                    <h1 className="">Marvelous v2.0</h1>
-                    <p onClick={() => deleteModalRef.current?.showModal()} className="cursor-pointer">
+                    <h1 className="font-bold text-lg md:text-3xl ">Marvelous v2.0</h1>
+                    <p
+                        onClick={() => deleteModalRef.current?.showModal()}
+                        className="cursor-pointer underline text-blue-500"
+                    >
                         Delete all tasks
                     </p>
                 </section>
-                <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40 mb-12">
+                <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
                     <form
                         action="submit"
                         onSubmit={handleFormSubmit}
-                        className="w-full flex flex-col md:flex-row gap-1 md:gap-2"
+                        className="w-full flex flex-col md:flex-row gap-5 md:gap-2"
                     >
-                        <input
-                            className="w-full border border-black rounded-md p-1"
-                            placeholder="New task.."
-                            type="text"
-                            name="newTask"
-                            id="newTask"
-                            onChange={handleTaskInput}
-                            value={newTask}
-                        />
-                        <button className="bg-cyan-300 rounded-md border border-black md:w-24">Add</button>
+                        <div className="relative w-full">
+                            <input
+                                className={`w-full border rounded-md p-2 ${
+                                    isBlank ? "border-red-600" : "border-black"
+                                }`}
+                                placeholder="New task.."
+                                type="text"
+                                name="newTask"
+                                id="newTask"
+                                onChange={handleTaskInput}
+                                value={newTask}
+                            />
+                            {isBlank && (
+                                <div className="absolute text-sm md:text-base top-full text-red-600">
+                                    Please fill in a description for the new task.
+                                </div>
+                            )}
+                        </div>
+
+                        <button className="bg-cyan-300 rounded-md border border-black md:w-24 p-1">
+                            Add
+                        </button>
                     </form>
                     <input
-                        className="w-full border border-black rounded-md p-1"
+                        className="w-full border border-black rounded-md p-2"
                         placeholder="Search.."
                         type="text"
                         name="search"
