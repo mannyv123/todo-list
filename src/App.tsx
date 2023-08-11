@@ -7,6 +7,7 @@ import { Task } from "./utils/types";
 function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newTask, setNewTask] = useState<string>("");
+    const [searchInput, setSearchInput] = useState<string>("");
 
     //Load tasks on mount
     useEffect(() => {
@@ -14,6 +15,16 @@ function App() {
             .then((data) => setTasks(data))
             .catch((error) => console.error(`Error fetching tasks: ${error}`));
     }, []);
+
+    //Handle search input
+    const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearchInput(e.target.value);
+    };
+
+    //Handle input for new task
+    const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setNewTask(e.target.value);
+    };
 
     //Handle task completion change
     const handleTaskCompletionChange = async (taskId: string) => {
@@ -24,11 +35,6 @@ function App() {
         } catch (error) {
             console.error(`Error updating task: ${error}`);
         }
-    };
-
-    //Handle input for new task
-    const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewTask(e.target.value);
     };
 
     //Handle new task submission
@@ -66,6 +72,17 @@ function App() {
         }
     };
 
+    //Handle search filtering of tasks
+    const filteredTasks = tasks.filter((task) => {
+        if (searchInput === "") {
+            return task;
+        }
+        const lowerCasedSearch = searchInput.toLowerCase();
+        const taskContent = task.task.toLowerCase();
+
+        return taskContent.includes(lowerCasedSearch);
+    });
+
     return (
         <main className="mx-auto max-w-7xl p-4">
             <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
@@ -97,9 +114,11 @@ function App() {
                     type="text"
                     name="search"
                     id="search"
+                    onChange={handleSearchInput}
+                    value={searchInput}
                 />
             </section>
-            <TaskList tasks={tasks} handleTaskCompletionChange={handleTaskCompletionChange} />
+            <TaskList tasks={filteredTasks} handleTaskCompletionChange={handleTaskCompletionChange} />
         </main>
     );
 }
