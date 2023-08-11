@@ -9,6 +9,7 @@ function App() {
     const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
     const [newTask, setNewTask] = useState<string>(""); //tracks new task input
     const [searchInput, setSearchInput] = useState<string>(""); //tracks search input
+    const [isBlank, setIsBlank] = useState<boolean>(false);
 
     //Ref for modal to delete tasks
     const deleteModalRef = useRef<HTMLDialogElement>(null);
@@ -28,6 +29,9 @@ function App() {
     //Handle input for new task
     const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
         setNewTask(e.target.value);
+        if (e.target.value) {
+            setIsBlank(false);
+        }
     };
 
     //Handle task completion change
@@ -45,8 +49,8 @@ function App() {
     const handleFormSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        //TODO: add form validation
         if (newTask === "") {
+            setIsBlank(true);
             return;
         }
 
@@ -85,21 +89,31 @@ function App() {
                         Delete all tasks
                     </p>
                 </section>
-                <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40 mb-12">
+                <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
                     <form
                         action="submit"
                         onSubmit={handleFormSubmit}
-                        className="w-full flex flex-col md:flex-row gap-1 md:gap-2"
+                        className="w-full flex flex-col md:flex-row gap-5 md:gap-2"
                     >
-                        <input
-                            className="w-full border border-black rounded-md p-2"
-                            placeholder="New task.."
-                            type="text"
-                            name="newTask"
-                            id="newTask"
-                            onChange={handleTaskInput}
-                            value={newTask}
-                        />
+                        <div className="relative w-full">
+                            <input
+                                className={`w-full border rounded-md p-2 ${
+                                    isBlank ? "border-red-600" : "border-black"
+                                }`}
+                                placeholder="New task.."
+                                type="text"
+                                name="newTask"
+                                id="newTask"
+                                onChange={handleTaskInput}
+                                value={newTask}
+                            />
+                            {isBlank && (
+                                <div className="absolute text-sm md:text-base top-full text-red-600">
+                                    Please fill in a description for the new task.
+                                </div>
+                            )}
+                        </div>
+
                         <button className="bg-cyan-300 rounded-md border border-black md:w-24 p-1">
                             Add
                         </button>
