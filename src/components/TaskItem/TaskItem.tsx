@@ -11,6 +11,7 @@ function TaskItem({ task, handleTaskCompletionChange }: TaskProps) {
     return (
         <div className="flex gap-4">
             <input
+                className="checked:accent-white"
                 type="checkbox"
                 name="task"
                 id={taskId}

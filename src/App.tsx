@@ -114,7 +114,7 @@ function App() {
                             )}
                         </div>
 
-                        <button className="bg-cyan-300 rounded-md border border-black md:w-24 p-1">
+                        <button className="bg-cyan-300 hover:bg-cyan-100 rounded-md border border-black md:w-24 p-1">
                             Add
                         </button>
                     </form>
