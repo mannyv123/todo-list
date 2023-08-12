@@ -6,6 +6,7 @@ describe("TaskList", () => {
     const tasks = [
         { _id: "1", task: "Task 1", completed: false, createdAt: new Date(), updatedAt: new Date() },
         { _id: "2", task: "Task 2", completed: true, createdAt: new Date(), updatedAt: new Date() },
+        { _id: "3", task: "Task 3", completed: true, createdAt: new Date(), updatedAt: new Date() },
     ];
 
     it("renders headings correclty", () => {
@@ -18,5 +19,17 @@ describe("TaskList", () => {
 
         expect(todoList).toBeInTheDocument();
         expect(doneList).toBeInTheDocument();
+    });
+
+    it("renders the correct amount of tasks for each section", () => {
+        const handleTaskCompletionChange = vi.fn();
+
+        render(<TaskList tasks={tasks} handleTaskCompletionChange={handleTaskCompletionChange} />);
+
+        const uncompletedTasks = screen.getAllByRole("checkbox", { checked: false });
+        const completedTasks = screen.getAllByRole("checkbox", { checked: true });
+
+        expect(uncompletedTasks).toHaveLength(1);
+        expect(completedTasks).toHaveLength(2);
     });
 });
