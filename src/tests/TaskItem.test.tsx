@@ -13,8 +13,15 @@ describe("TaskItem", () => {
         };
 
         const handleTaskCompletionChange = vi.fn();
+        const handleSingleTaskDelete = vi.fn();
 
-        render(<TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />);
+        render(
+            <TaskItem
+                task={task}
+                handleTaskCompletionChange={handleTaskCompletionChange}
+                handleSingleTaskDelete={handleSingleTaskDelete}
+            />
+        );
 
         const taskDesc = screen.getByText(/example task/i);
         expect(taskDesc).toBeInTheDocument();
@@ -25,5 +32,12 @@ describe("TaskItem", () => {
         fireEvent.click(checkbox);
         expect(handleTaskCompletionChange).toHaveBeenCalled();
         expect(handleTaskCompletionChange).toHaveBeenCalledWith("1");
+
+        const deleteIcon = screen.getByRole("img");
+        fireEvent.mouseOver(deleteIcon);
+        expect(deleteIcon).toBeVisible();
+
+        fireEvent.click(deleteIcon);
+        expect(handleSingleTaskDelete).toHaveBeenCalledWith("1");
     });
 });

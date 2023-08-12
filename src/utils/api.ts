@@ -65,3 +65,16 @@ export const deleteAllTasks = async () => {
         throw new Error(`Error deleting tasks: ${err}`);
     }
 };
+
+//Delete single task
+export const deleteSingleTask = async (taskId: string) => {
+    try {
+        const response = await fetch(`${API_BASE_URL}${taskId}`, {
+            method: "DELETE",
+        });
+
+        return await response.json();
+    } catch (err) {
+        throw new Error(`Error deleting task: ${err}`);
+    }
+};
