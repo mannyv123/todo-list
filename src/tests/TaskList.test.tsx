@@ -11,8 +11,15 @@ describe("TaskList", () => {
 
     it("renders headings correclty", () => {
         const handleTaskCompletionChange = vi.fn();
+        const handleSingleTaskDelete = vi.fn();
 
-        render(<TaskList tasks={tasks} handleTaskCompletionChange={handleTaskCompletionChange} />);
+        render(
+            <TaskList
+                tasks={tasks}
+                handleTaskCompletionChange={handleTaskCompletionChange}
+                handleSingleTaskDelete={handleSingleTaskDelete}
+            />
+        );
 
         const todoList = screen.getByRole("heading", { name: /to do/i });
         const doneList = screen.getByRole("heading", { name: /done/i });
@@ -23,8 +30,15 @@ describe("TaskList", () => {
 
     it("renders the correct amount of tasks for each section", () => {
         const handleTaskCompletionChange = vi.fn();
+        const handleSingleTaskDelete = vi.fn();
 
-        render(<TaskList tasks={tasks} handleTaskCompletionChange={handleTaskCompletionChange} />);
+        render(
+            <TaskList
+                tasks={tasks}
+                handleTaskCompletionChange={handleTaskCompletionChange}
+                handleSingleTaskDelete={handleSingleTaskDelete}
+            />
+        );
 
         const uncompletedTasks = screen.getAllByRole("checkbox", { checked: false });
         const completedTasks = screen.getAllByRole("checkbox", { checked: true });
