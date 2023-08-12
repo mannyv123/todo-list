@@ -13,7 +13,6 @@ describe("TaskItem", () => {
         };
 
         const handleTaskCompletionChange = vi.fn();
-        handleTaskCompletionChange("1");
 
         render(<TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />);
 
@@ -23,7 +22,8 @@ describe("TaskItem", () => {
         const checkbox = screen.getByRole("checkbox", { name: /example task/i });
         expect(checkbox).not.toBeChecked();
 
-        fireEvent.change(checkbox);
+        fireEvent.click(checkbox);
+        expect(handleTaskCompletionChange).toHaveBeenCalled();
         expect(handleTaskCompletionChange).toHaveBeenCalledWith("1");
     });
 });
