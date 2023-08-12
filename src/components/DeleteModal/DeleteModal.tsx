@@ -30,14 +30,14 @@ function DeleteModal({ deleteModalRef, tasks, setTasks }: DeleteModalProps) {
                 <div className="w-full flex flex-col md:flex-row md:justify-center gap-5">
                     {tasks.length > 0 && (
                         <div
-                            className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs"
+                            className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs hover:bg-cyan-100"
                             onClick={handleDeleteAll}
                         >
                             Delete
                         </div>
                     )}
                     <div
-                        className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs"
+                        className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs hover:bg-cyan-100"
                         onClick={() => deleteModalRef.current?.close()}
                     >
                         Close
