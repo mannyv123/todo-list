@@ -1,27 +1,78 @@
-# React + TypeScript + Vite
+# Marvelous ToDo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Full stack todo list application that lets you add and query your todos and completed todos.
 
-Currently, two official plugins are available:
+See Server repo: https://github.com/mannyv123/todo-list-server
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+-   Add new todos
+-   Mark todos complete
+-   Search todos
+-   Delete all todos
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+**Client:** Vite, React, TypeScript, TailwindCSS
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+**Server:** Node, Express, TypeScript, MongooseJS
+
+## Demo
+
+Insert gif or link to demo
+
+## Run Locally
+
+Note: To run locally, please set up a .env file with the correct environment variables (see .env.sample file). Also requires MongoDB database URL.
+
+### Client
+
+Clone the project
+
+```bash
+  git clone git@github.com:mannyv123/todo-list.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Go to the project directory
+
+```bash
+  cd todo-list
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
+
+### Server
+
+Clone the project
+
+```bash
+  git clone git@github.com:mannyv123/todo-list-server.git
+```
+
+Go to the project directory
+
+```bash
+  cd todo-list-server
+```
+
+Install dependencies
+
+```bash
+  npm install
+```
+
+Start the server
+
+```bash
+  npm run dev
+```
