@@ -4,9 +4,10 @@ import TaskItem from "../TaskItem/TaskItem";
 interface TaskListProps {
     tasks: Task[];
     handleTaskCompletionChange: (taskId: string) => void;
+    handleSingleTaskDelete: (taskId: string) => void;
 }
 
-function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
+function TaskList({ tasks, handleTaskCompletionChange, handleSingleTaskDelete }: TaskListProps) {
     const uncompletedTasks = tasks.filter((task) => task.completed === false); //filter for uncompleted tasks
     const completedTasks = tasks
         .filter((task) => task.completed === true) //filter for completed tasks
@@ -19,7 +20,11 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
                 <ul>
                     {uncompletedTasks.map((task) => (
                         <li key={task._id}>
-                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
+                            <TaskItem
+                                task={task}
+                                handleTaskCompletionChange={handleTaskCompletionChange}
+                                handleSingleTaskDelete={handleSingleTaskDelete}
+                            />
                         </li>
                     ))}
                 </ul>
@@ -29,7 +34,11 @@ function TaskList({ tasks, handleTaskCompletionChange }: TaskListProps) {
                 <ul>
                     {completedTasks.slice(0, 10).map((task) => (
                         <li key={task._id}>
-                            <TaskItem task={task} handleTaskCompletionChange={handleTaskCompletionChange} />
+                            <TaskItem
+                                task={task}
+                                handleTaskCompletionChange={handleTaskCompletionChange}
+                                handleSingleTaskDelete={handleSingleTaskDelete}
+                            />
                         </li>
                     ))}
                     {completedTasks.length > 10 && <li>...</li>}

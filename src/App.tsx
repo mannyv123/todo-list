@@ -1,6 +1,6 @@
 import "./App.css";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { addTask, getTasks, updateTask } from "./utils/api";
+import { addTask, deleteSingleTask, getTasks, updateTask } from "./utils/api";
 import { Task } from "./utils/types";
 import TaskList from "./components/TaskList/TaskList";
 import DeleteModal from "./components/DeleteModal/DeleteModal";
@@ -61,6 +61,17 @@ function App() {
             setNewTask("");
         } catch (err) {
             console.error(`Error submitting new task: ${err}`);
+        }
+    };
+
+    //Handle single task deletion
+    const handleSingleTaskDelete = async (taskId: string) => {
+        try {
+            await deleteSingleTask(taskId);
+            const updatedTasks = await getTasks();
+            setTasks(updatedTasks);
+        } catch (err) {
+            console.error(`Error deleting task: ${err}`);
         }
     };
 
@@ -128,7 +139,11 @@ function App() {
                         value={searchInput}
                     />
                 </section>
-                <TaskList tasks={filteredTasks} handleTaskCompletionChange={handleTaskCompletionChange} />
+                <TaskList
+                    tasks={filteredTasks}
+                    handleTaskCompletionChange={handleTaskCompletionChange}
+                    handleSingleTaskDelete={handleSingleTaskDelete}
+                />
             </div>
         </main>
     );
