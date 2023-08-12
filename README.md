@@ -30,7 +30,7 @@ Note: To run locally, please set up a .env file with the correct environment var
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone git@github.com:mannyv123/todo-list.git
 ```
 
 Go to the project directory
@@ -56,7 +56,7 @@ Start the server
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone git@github.com:mannyv123/todo-list-server.git
 ```
 
 Go to the project directory
