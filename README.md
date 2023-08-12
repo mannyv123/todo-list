@@ -36,7 +36,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd todo-list
 ```
 
 Install dependencies
@@ -62,7 +62,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd todo-list-server
 ```
 
 Install dependencies
