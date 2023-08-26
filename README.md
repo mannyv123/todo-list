@@ -6,10 +6,10 @@ See Server repo: https://github.com/mannyv123/todo-list-server
 
 ## Features
 
--   Add new todos
--   Mark todos complete
--   Search todos
--   Delete all todos
+- Add new todos
+- Mark todos complete
+- Search todos
+- Delete all todos
 
 ## Tech Stack
 
