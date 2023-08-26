@@ -4,6 +4,7 @@ import { addTask, deleteSingleTask, getTasks, updateTask } from './utils/api';
 import { Task } from './utils/types';
 import TaskList from './components/TaskList/TaskList';
 import DeleteModal from './components/DeleteModal/DeleteModal';
+import HeaderContainer from './components/HeaderContainer';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
@@ -95,15 +96,7 @@ function App() {
         setTasks={setTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
-        <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
-          <h1 className="font-bold text-lg md:text-3xl ">Marvelous v2.0</h1>
-          <p
-            onClick={() => deleteModalRef.current?.showModal()}
-            className="cursor-pointer underline text-blue-500"
-          >
-            Delete all tasks
-          </p>
-        </section>
+        <HeaderContainer deleteModalRef={deleteModalRef} />
         <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
           <form
             action="submit"
