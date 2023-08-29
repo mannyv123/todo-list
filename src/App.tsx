@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { deleteSingleTask, getTasks, updateTask } from './utils/api';
 import { Task } from './utils/types';
 import TaskListContainer from './components/TaskListContainer';
-import DeleteModal from './components/DeleteModal/DeleteModal';
+import DeleteModalContainer from './components/DeleteModalContainer';
 import HeaderContainer from './components/HeaderContainer';
 import AddTaskContainer from './components/AddTaskContainer';
 
@@ -62,7 +62,7 @@ function App() {
 
   return (
     <main>
-      <DeleteModal
+      <DeleteModalContainer
         deleteModalRef={deleteModalRef}
         tasks={tasks}
         setTasks={setTasks}
