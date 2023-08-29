@@ -1,7 +1,7 @@
-import { Task } from '../../utils/types';
-import deleteIcon from '../../assets/icon-delete.svg';
+import { Task } from '../utils/types';
+import deleteIcon from '../assets/icon-delete.svg';
 
-interface TaskProps {
+interface TaskItemProps {
   task: Task;
   handleTaskCompletionChange: (taskId: string) => Promise<void>;
   handleSingleTaskDelete: (taskId: string) => Promise<void>;
@@ -11,7 +11,7 @@ function TaskItem({
   task,
   handleTaskCompletionChange,
   handleSingleTaskDelete,
-}: TaskProps) {
+}: TaskItemProps) {
   const taskId = `task-${task._id}`; // Unique ID for the input element
 
   return (

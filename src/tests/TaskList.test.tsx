@@ -1,6 +1,6 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import TaskList from '../components/TaskList/TaskList';
+import TaskList from '../components/TaskListContainer';
 
 describe('TaskList', () => {
   const tasks = [

@@ -2,14 +2,13 @@ import './App.css';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { deleteSingleTask, getTasks, updateTask } from './utils/api';
 import { Task } from './utils/types';
-import TaskList from './components/TaskList/TaskList';
+import TaskListContainer from './components/TaskListContainer';
 import DeleteModal from './components/DeleteModal/DeleteModal';
 import HeaderContainer from './components/HeaderContainer';
 import AddTaskContainer from './components/AddTaskContainer';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
-
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
 
   //Ref for modal to delete tasks
@@ -82,7 +81,7 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskList
+        <TaskListContainer
           tasks={filteredTasks}
           handleTaskCompletionChange={handleTaskCompletionChange}
           handleSingleTaskDelete={handleSingleTaskDelete}
