@@ -1,17 +1,13 @@
+import { Dispatch, SetStateAction } from 'react';
 import { Task } from '../utils/types';
 import TaskListUI from './TaskListUI';
 
 interface TaskListContainerProps {
   tasks: Task[];
-  handleTaskCompletionChange: (taskId: string) => Promise<void>;
-  handleSingleTaskDelete: (taskId: string) => Promise<void>;
+  setTasks: Dispatch<SetStateAction<Task[]>>;
 }
 
-function TaskListContainer({
-  tasks,
-  handleTaskCompletionChange,
-  handleSingleTaskDelete,
-}: TaskListContainerProps) {
+function TaskListContainer({ tasks, setTasks }: TaskListContainerProps) {
   const uncompletedTasks = tasks.filter((task) => task.completed === false); //filter for uncompleted tasks
   const completedTasks = tasks
     .filter((task) => task.completed === true) //filter for completed tasks
@@ -25,8 +21,7 @@ function TaskListContainer({
       <TaskListUI
         uncompletedTasks={uncompletedTasks}
         completedTasks={completedTasks}
-        handleTaskCompletionChange={handleTaskCompletionChange}
-        handleSingleTaskDelete={handleSingleTaskDelete}
+        setTasks={setTasks}
       />
     </section>
   );

@@ -1,19 +1,19 @@
-import { Task } from '../utils/types';
 import deleteIcon from '../assets/icon-delete.svg';
+import { Task } from '../utils/types';
 
-interface TaskItemProps {
+interface TaskItemUIProps {
+  taskIdentifier: string;
   task: Task;
   handleTaskCompletionChange: (taskId: string) => Promise<void>;
   handleSingleTaskDelete: (taskId: string) => Promise<void>;
 }
 
-function TaskItem({
+function TaskItemUI({
+  taskIdentifier,
   task,
   handleTaskCompletionChange,
   handleSingleTaskDelete,
-}: TaskItemProps) {
-  const taskId = `task-${task._id}`; // Unique ID for the input element
-
+}: TaskItemUIProps) {
   return (
     <div className="flex hover:bg-gray-300 px-2 rounded-lg group">
       <div className="w-full flex gap-4">
@@ -21,11 +21,11 @@ function TaskItem({
           className="checked:accent-white cursor-pointer"
           type="checkbox"
           name="task"
-          id={taskId}
+          id={taskIdentifier}
           checked={task.completed}
           onChange={() => void handleTaskCompletionChange(task._id)}
         />
-        <label className="cursor-pointer w-full" htmlFor={taskId}>
+        <label className="cursor-pointer w-full" htmlFor={taskIdentifier}>
           {task.task}
         </label>
       </div>
@@ -39,4 +39,4 @@ function TaskItem({
   );
 }
 
-export default TaskItem;
+export default TaskItemUI;

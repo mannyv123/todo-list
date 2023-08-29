@@ -1,6 +1,6 @@
 import './App.css';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { deleteSingleTask, getTasks, updateTask } from './utils/api';
+import { getTasks } from './utils/api';
 import { Task } from './utils/types';
 import TaskListContainer from './components/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
@@ -26,37 +26,13 @@ function App() {
     setSearchInput(e.target.value);
   };
 
-  //Handle task completion change
-  const handleTaskCompletionChange = async (taskId: string) => {
-    try {
-      await updateTask(taskId);
-      const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
-    } catch (err) {
-      console.error('Error updating task:', err);
-    }
-  };
-
-  //Handle single task deletion
-  const handleSingleTaskDelete = async (taskId: string) => {
-    try {
-      await deleteSingleTask(taskId);
-      const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
-    } catch (err) {
-      console.error('Error deleting task:', err);
-    }
-  };
-
   //Handle search filtering of tasks
   const filteredTasks = tasks.filter((task) => {
     if (searchInput === '') {
       return task;
     }
-
     const lowerCasedSearch = searchInput.toLowerCase();
     const taskContent = task.task.toLowerCase();
-
     return taskContent.includes(lowerCasedSearch);
   });
 
@@ -81,11 +57,7 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskListContainer
-          tasks={filteredTasks}
-          handleTaskCompletionChange={handleTaskCompletionChange}
-          handleSingleTaskDelete={handleSingleTaskDelete}
-        />
+        <TaskListContainer tasks={filteredTasks} setTasks={setTasks} />
       </div>
     </main>
   );
