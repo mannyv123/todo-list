@@ -1,25 +1,24 @@
 import './App.css';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
-import { addTask, deleteSingleTask, getTasks, updateTask } from './utils/api';
-import { Task } from './utils/types';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import TaskList from './components/TaskList/TaskList';
 import DeleteModal from './components/DeleteModal/DeleteModal';
+import useTaskManager from './hooks/useTaskManager';
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
   const [newTask, setNewTask] = useState<string>(''); //tracks new task input
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
   const [isBlank, setIsBlank] = useState<boolean>(false);
 
+  const {
+    tasks,
+    addNewTask,
+    updateTaskCompletion,
+    deleteAllTasksHandler,
+    deleteSingleTaskHandler,
+  } = useTaskManager();
+
   //Ref for modal to delete tasks
   const deleteModalRef = useRef<HTMLDialogElement>(null);
-
-  //Load tasks on mount
-  useEffect(() => {
-    getTasks()
-      .then((data) => setTasks(data))
-      .catch((err) => console.error(`Error fetching tasks: ${err}`));
-  }, []);
 
   //Handle search input
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,17 +33,6 @@ function App() {
     }
   };
 
-  //Handle task completion change
-  const handleTaskCompletionChange = async (taskId: string) => {
-    try {
-      await updateTask(taskId);
-      const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
-    } catch (err) {
-      console.error('Error updating task:', err);
-    }
-  };
-
   //Handle new task submission
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,23 +43,10 @@ function App() {
     }
 
     try {
-      await addTask(newTask);
-      const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
+      await addNewTask(newTask);
       setNewTask('');
     } catch (err) {
       console.error('Error submitting new task:', err);
-    }
-  };
-
-  //Handle single task deletion
-  const handleSingleTaskDelete = async (taskId: string) => {
-    try {
-      await deleteSingleTask(taskId);
-      const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
-    } catch (err) {
-      console.error('Error deleting task:', err);
     }
   };
 
@@ -91,8 +66,8 @@ function App() {
     <main>
       <DeleteModal
         deleteModalRef={deleteModalRef}
+        deleteAllTasksHandler={deleteAllTasksHandler}
         tasks={tasks}
-        setTasks={setTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
         <section className="flex flex-col justify-between md:flex-row md:items-center gap-2 mb-12">
@@ -145,8 +120,8 @@ function App() {
         </section>
         <TaskList
           tasks={filteredTasks}
-          handleTaskCompletionChange={handleTaskCompletionChange}
-          handleSingleTaskDelete={handleSingleTaskDelete}
+          updateTaskCompletion={updateTaskCompletion}
+          deleteSingleTaskHandler={deleteSingleTaskHandler}
         />
       </div>
     </main>

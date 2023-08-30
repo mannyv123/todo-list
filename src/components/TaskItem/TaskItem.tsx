@@ -3,14 +3,14 @@ import deleteIcon from '../../assets/icon-delete.svg';
 
 interface TaskProps {
   task: Task;
-  handleTaskCompletionChange: (taskId: string) => Promise<void>;
-  handleSingleTaskDelete: (taskId: string) => Promise<void>;
+  updateTaskCompletion: (taskId: string) => Promise<void>;
+  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 function TaskItem({
   task,
-  handleTaskCompletionChange,
-  handleSingleTaskDelete,
+  updateTaskCompletion,
+  deleteSingleTaskHandler,
 }: TaskProps) {
   const taskId = `task-${task._id}`; // Unique ID for the input element
 
@@ -23,7 +23,7 @@ function TaskItem({
           name="task"
           id={taskId}
           checked={task.completed}
-          onChange={() => void handleTaskCompletionChange(task._id)}
+          onChange={() => void updateTaskCompletion(task._id)}
         />
         <label className="cursor-pointer w-full" htmlFor={taskId}>
           {task.task}
@@ -33,7 +33,7 @@ function TaskItem({
         className="lg:hidden group-hover:block w-3 hover:w-4 cursor-pointer"
         src={deleteIcon}
         alt="delete"
-        onClick={() => void handleSingleTaskDelete(task._id)}
+        onClick={() => void deleteSingleTaskHandler(task._id)}
       />
     </div>
   );

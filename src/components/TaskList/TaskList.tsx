@@ -3,14 +3,14 @@ import TaskItem from '../TaskItem/TaskItem';
 
 interface TaskListProps {
   tasks: Task[];
-  handleTaskCompletionChange: (taskId: string) => Promise<void>;
-  handleSingleTaskDelete: (taskId: string) => Promise<void>;
+  updateTaskCompletion: (taskId: string) => Promise<void>;
+  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 function TaskList({
   tasks,
-  handleTaskCompletionChange,
-  handleSingleTaskDelete,
+  updateTaskCompletion,
+  deleteSingleTaskHandler,
 }: TaskListProps) {
   const uncompletedTasks = tasks.filter((task) => task.completed === false); //filter for uncompleted tasks
   const completedTasks = tasks
@@ -29,8 +29,8 @@ function TaskList({
             <li key={task._id}>
               <TaskItem
                 task={task}
-                handleTaskCompletionChange={handleTaskCompletionChange}
-                handleSingleTaskDelete={handleSingleTaskDelete}
+                updateTaskCompletion={updateTaskCompletion}
+                deleteSingleTaskHandler={deleteSingleTaskHandler}
               />
             </li>
           ))}
@@ -43,8 +43,8 @@ function TaskList({
             <li key={task._id}>
               <TaskItem
                 task={task}
-                handleTaskCompletionChange={handleTaskCompletionChange}
-                handleSingleTaskDelete={handleSingleTaskDelete}
+                updateTaskCompletion={updateTaskCompletion}
+                deleteSingleTaskHandler={deleteSingleTaskHandler}
               />
             </li>
           ))}

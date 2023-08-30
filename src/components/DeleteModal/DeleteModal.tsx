@@ -1,23 +1,20 @@
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import { RefObject } from 'react';
 import { Task } from '../../utils/types';
-import { deleteAllTasks } from '../../utils/api';
 
 interface DeleteModalProps {
   deleteModalRef: RefObject<HTMLDialogElement>;
   tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+  deleteAllTasksHandler: () => Promise<void>;
 }
 
-function DeleteModal({ deleteModalRef, tasks, setTasks }: DeleteModalProps) {
-  //Handle deleting all tasks
-  const handleDeleteAll = async () => {
-    try {
-      await deleteAllTasks();
-      setTasks([]);
-      deleteModalRef.current?.close();
-    } catch (err) {
-      console.error('Error deleting all tasks:', err);
-    }
+function DeleteModal({
+  deleteModalRef,
+  tasks,
+  deleteAllTasksHandler,
+}: DeleteModalProps) {
+  const handleTasksDelete = async () => {
+    await deleteAllTasksHandler();
+    deleteModalRef.current?.close();
   };
   return (
     <dialog
@@ -34,7 +31,7 @@ function DeleteModal({ deleteModalRef, tasks, setTasks }: DeleteModalProps) {
           {tasks.length > 0 && (
             <div
               className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs hover:bg-cyan-100"
-              onClick={() => void handleDeleteAll()}
+              onClick={() => void handleTasksDelete()}
             >
               Delete
             </div>
