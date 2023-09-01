@@ -8,7 +8,7 @@ import {
   updateTask,
 } from '../utils/api';
 
-function useTaskManager() {
+export function useTaskManager() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
@@ -77,5 +77,3 @@ function useTaskManager() {
     deleteSingleTaskHandler,
   };
 }
-
-export default useTaskManager;

@@ -2,7 +2,7 @@ import './App.css';
 import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import TaskList from './components/TaskList/TaskList';
 import DeleteModal from './components/DeleteModal/DeleteModal';
-import useTaskManager from './hooks/useTaskManager';
+import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
   const [newTask, setNewTask] = useState<string>(''); //tracks new task input
