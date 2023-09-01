@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Task } from '../utils/types';
 import {
   addTask,
@@ -8,30 +8,28 @@ import {
   updateTask,
 } from '../utils/api';
 
+//Fetch tasks from API
+const fetchTasks = async (updateTaskData: Dispatch<SetStateAction<Task[]>>) => {
+  try {
+    const tasksData = await getTasks();
+    updateTaskData(tasksData);
+  } catch (err) {
+    console.error('Error fetching tasks: ', err);
+  }
+};
+
 export function useTaskManager() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    fetchTasks().catch((err) => {
-      console.error('Error getting tasks: ', err);
-    });
+    void fetchTasks(setTasks); //Pass the setTasks function as a callback
   }, []);
-
-  //Fetch tasks from API
-  const fetchTasks = async () => {
-    try {
-      const tasksData = await getTasks();
-      setTasks(tasksData);
-    } catch (err) {
-      console.error('Error fetching tasks: ', err);
-    }
-  };
 
   //Add a new task
   const addNewTask = async (taskDescription: string) => {
     try {
       await addTask(taskDescription);
-      await fetchTasks();
+      await fetchTasks(setTasks);
     } catch (err) {
       console.error('Error adding task: ', err);
     }
@@ -41,7 +39,7 @@ export function useTaskManager() {
   const updateTaskCompletion = async (taskId: string) => {
     try {
       await updateTask(taskId);
-      await fetchTasks();
+      await fetchTasks(setTasks);
     } catch (err) {
       console.error('Error adding task: ', err);
     }
@@ -61,7 +59,7 @@ export function useTaskManager() {
   const deleteSingleTaskHandler = async (taskId: string) => {
     try {
       await deleteSingleTask(taskId);
-      await fetchTasks();
+      await fetchTasks(setTasks);
     } catch (err) {
       console.error('Error deleting task: ', err);
     }
