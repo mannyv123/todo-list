@@ -12,11 +12,9 @@ export function useTaskManager() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    fetchTasks()
-      .then(() => {})
-      .catch((err) => {
-        console.error('Error getting tasks: ', err);
-      });
+    fetchTasks().catch((err) => {
+      console.error('Error getting tasks: ', err);
+    });
   }, []);
 
   //Fetch tasks from API
