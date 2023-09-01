@@ -5,7 +5,7 @@ import TaskItemContainer from './TaskItemContainer';
 interface TaskListUIProps {
   uncompletedTasks: Task[];
   completedTasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+  updateTaskData: Dispatch<SetStateAction<Task[]>>;
 }
 
 const COMPLETED_TASKS = 10; //number of completed tasks to show
@@ -13,7 +13,7 @@ const COMPLETED_TASKS = 10; //number of completed tasks to show
 function TaskListUI({
   uncompletedTasks,
   completedTasks,
-  setTasks,
+  updateTaskData,
 }: TaskListUIProps) {
   return (
     <>
@@ -22,7 +22,7 @@ function TaskListUI({
         <ul>
           {uncompletedTasks.map((task) => (
             <li key={task._id}>
-              <TaskItemContainer task={task} setTasks={setTasks} />
+              <TaskItemContainer task={task} updateTaskData={updateTaskData} />
             </li>
           ))}
         </ul>
@@ -32,10 +32,10 @@ function TaskListUI({
         <ul>
           {completedTasks.slice(0, COMPLETED_TASKS).map((task) => (
             <li key={task._id}>
-              <TaskItemContainer task={task} setTasks={setTasks} />
+              <TaskItemContainer task={task} updateTaskData={updateTaskData} />
             </li>
           ))}
-          {completedTasks.length > COMPLETED_TASKS && <li>...</li>}
+          {completedTasks.length > COMPLETED_TASKS ? <li>...</li> : ''}
         </ul>
       </div>
     </>

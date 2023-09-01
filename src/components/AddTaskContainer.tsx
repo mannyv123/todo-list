@@ -14,8 +14,8 @@ interface AddTaskContainerProps {
 }
 
 function AddTaskContainer({ setTasks }: AddTaskContainerProps) {
-  const [newTask, setNewTask] = useState<string>(''); //tracks new task input
-  const [isBlank, setIsBlank] = useState<boolean>(false); //tracks if input is blank on submit
+  const [newTask, setNewTask] = useState(''); //tracks new task input
+  const [isBlank, setIsBlank] = useState(false); //tracks if input is blank on submit
 
   //Handle input for new task
   const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {

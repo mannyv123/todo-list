@@ -31,7 +31,7 @@ function DeleteModalContainer({
   };
 
   //Boolean to conditionally render options in modal
-  const tasksExist: boolean = tasks.length > 0;
+  const hasTasks: boolean = tasks.length > 0;
 
   return (
     <dialog
@@ -41,7 +41,7 @@ function DeleteModalContainer({
       <DeleteModalUI
         handleDeleteAll={handleDeleteAll}
         handleCloseModal={handleCloseModal}
-        tasksExist={tasksExist}
+        hasTasks={hasTasks}
       />
     </dialog>
   );

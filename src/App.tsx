@@ -4,8 +4,8 @@ import { getTasks } from './utils/api';
 import { Task } from './utils/types';
 import TaskListContainer from './components/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
-import HeaderContainer from './components/HeaderContainer';
 import AddTaskContainer from './components/AddTaskContainer';
+import HeaderUI from './components/HeaderUI';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
@@ -13,6 +13,11 @@ function App() {
 
   //Ref for modal to delete tasks
   const deleteModalRef = useRef<HTMLDialogElement>(null);
+
+  //Function to open modal
+  const openDeleteModal = () => {
+    deleteModalRef.current?.showModal();
+  };
 
   //Load tasks on mount
   useEffect(() => {
@@ -44,7 +49,7 @@ function App() {
         setTasks={setTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
-        <HeaderContainer deleteModalRef={deleteModalRef} />
+        <HeaderUI openDeleteModal={openDeleteModal} />
         <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
           <AddTaskContainer setTasks={setTasks} />
           <input
@@ -57,7 +62,7 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskListContainer tasks={filteredTasks} setTasks={setTasks} />
+        <TaskListContainer tasks={filteredTasks} updateTaskData={setTasks} />
       </div>
     </main>
   );

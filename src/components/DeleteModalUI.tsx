@@ -8,18 +8,18 @@ const MODAL_MESSAGES = {
 interface DeleteModalUIProps {
   handleDeleteAll: () => Promise<void>;
   handleCloseModal: () => void;
-  tasksExist: boolean;
+  hasTasks: boolean;
 }
 
 function DeleteModalUI({
   handleDeleteAll,
   handleCloseModal,
-  tasksExist,
+  hasTasks,
 }: DeleteModalUIProps) {
   return (
     <div className="h-full w-full flex flex-col justify-center items-center gap-10">
       <p>
-        {tasksExist
+        {hasTasks
           ? MODAL_MESSAGES.confirmDeleteAll
           : MODAL_MESSAGES.noTasksToDelete}
       </p>
@@ -30,13 +30,15 @@ function DeleteModalUI({
         >
           {MODAL_MESSAGES.closeButton}
         </div>
-        {tasksExist && (
+        {hasTasks ? (
           <div
             className="cursor-pointer border border-black text-center p-2 rounded-lg w-full md:max-w-xs hover:bg-cyan-100"
             onClick={() => void handleDeleteAll()}
           >
             {MODAL_MESSAGES.deleteButton}
           </div>
+        ) : (
+          ''
         )}
       </div>
     </div>

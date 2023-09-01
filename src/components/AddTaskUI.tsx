@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react';
+import clsx from 'clsx';
 
 interface AddTaskUIProps {
   isBlank: boolean;
@@ -11,8 +12,10 @@ function AddTaskUI({ isBlank, handleTaskInput, newTask }: AddTaskUIProps) {
     <>
       <div className="relative w-full">
         <input
-          className={`w-full border rounded-md p-2 
-          ${isBlank ? 'border-red-600' : 'border-black'}`}
+          className={clsx('w-full border rounded-md p-2', {
+            'border-red-600': isBlank,
+            'border-black': !isBlank,
+          })}
           placeholder="New task.."
           type="text"
           name="newTask"
@@ -20,10 +23,12 @@ function AddTaskUI({ isBlank, handleTaskInput, newTask }: AddTaskUIProps) {
           onChange={handleTaskInput}
           value={newTask}
         />
-        {isBlank && (
+        {isBlank ? (
           <div className="absolute text-sm md:text-base top-full text-red-600">
             Please fill in a description for the new task.
           </div>
+        ) : (
+          ''
         )}
       </div>
       <button className="bg-cyan-300 hover:bg-cyan-100 rounded-md border border-black md:w-24 p-1">

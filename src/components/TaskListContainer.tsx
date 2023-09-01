@@ -4,24 +4,28 @@ import TaskListUI from './TaskListUI';
 
 interface TaskListContainerProps {
   tasks: Task[];
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+  updateTaskData: Dispatch<SetStateAction<Task[]>>;
 }
 
-function TaskListContainer({ tasks, setTasks }: TaskListContainerProps) {
-  const uncompletedTasks = tasks.filter((task) => task.completed === false); //filter for uncompleted tasks
-  const completedTasks = tasks
-    .filter((task) => task.completed === true) //filter for completed tasks
-    .sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(), //sort filtered tasks by updatedAt time
-    );
+//Helper function to filter tasks by completion status
+const filterTasksByCompletionStatus = (tasks: Task[], completed: boolean) => {
+  return tasks.filter((task) => task.completed === completed);
+};
+
+function TaskListContainer({ tasks, updateTaskData }: TaskListContainerProps) {
+  //Filter for uncompleted tasks
+  const uncompletedTasks = filterTasksByCompletionStatus(tasks, false);
+  //Filter for completed tasks and sort latest to oldest
+  const completedTasks = filterTasksByCompletionStatus(tasks, true).sort(
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+  );
 
   return (
     <section className="flex flex-col md:flex-row gap-4 md:gap-20 lg:gap-40">
       <TaskListUI
         uncompletedTasks={uncompletedTasks}
         completedTasks={completedTasks}
-        setTasks={setTasks}
+        updateTaskData={updateTaskData}
       />
     </section>
   );

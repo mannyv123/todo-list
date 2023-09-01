@@ -5,10 +5,10 @@ import TaskItemUI from './TaskItemUI';
 
 interface TaskItemContainerProps {
   task: Task;
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+  updateTaskData: Dispatch<SetStateAction<Task[]>>;
 }
 
-function TaskItemContainer({ task, setTasks }: TaskItemContainerProps) {
+function TaskItemContainer({ task, updateTaskData }: TaskItemContainerProps) {
   const taskIdentifier = `task-${task._id}`; // Unique ID for the input element
 
   //Handle task completion change
@@ -16,7 +16,7 @@ function TaskItemContainer({ task, setTasks }: TaskItemContainerProps) {
     try {
       await updateTask(taskId);
       const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
+      updateTaskData(updatedTasks);
     } catch (err) {
       console.error('Error updating task:', err);
     }
@@ -27,7 +27,7 @@ function TaskItemContainer({ task, setTasks }: TaskItemContainerProps) {
     try {
       await deleteSingleTask(taskId);
       const updatedTasks = await getTasks();
-      setTasks(updatedTasks);
+      updateTaskData(updatedTasks);
     } catch (err) {
       console.error('Error deleting task:', err);
     }
