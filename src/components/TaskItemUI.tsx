@@ -2,14 +2,12 @@ import deleteIcon from '../assets/icon-delete.svg';
 import { Task } from '../utils/types';
 
 interface TaskItemUIProps {
-  taskIdentifier: string;
   task: Task;
   handleTaskCompletionChange: (taskId: string) => Promise<void>;
   handleSingleTaskDelete: (taskId: string) => Promise<void>;
 }
 
 function TaskItemUI({
-  taskIdentifier,
   task,
   handleTaskCompletionChange,
   handleSingleTaskDelete,
@@ -21,11 +19,11 @@ function TaskItemUI({
           className="checked:accent-white cursor-pointer"
           type="checkbox"
           name="task"
-          id={taskIdentifier}
+          id={task._id}
           checked={task.completed}
           onChange={() => void handleTaskCompletionChange(task._id)}
         />
-        <label className="cursor-pointer w-full" htmlFor={taskIdentifier}>
+        <label className="cursor-pointer w-full" htmlFor={task._id}>
           {task.task}
         </label>
       </div>

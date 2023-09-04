@@ -58,12 +58,12 @@ describe('TaskList', () => {
       />,
     );
 
-    const uncompletedTasks = screen.getAllByRole('checkbox', {
+    const incompletedTasks = screen.getAllByRole('checkbox', {
       checked: false,
     });
     const completedTasks = screen.getAllByRole('checkbox', { checked: true });
 
-    expect(uncompletedTasks).toHaveLength(1);
+    expect(incompletedTasks).toHaveLength(1);
     expect(completedTasks).toHaveLength(2);
   });
 });

@@ -1,19 +1,13 @@
-import {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useState,
-} from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { addTask, getTasks } from '../utils/api';
-import { Task } from '../utils/types';
+import { Task, UpdateCallback } from '../utils/types';
 import AddTaskUI from './AddTaskUI';
 
 interface AddTaskContainerProps {
-  setTasks: Dispatch<SetStateAction<Task[]>>;
+  setUpdateFunction: UpdateCallback<Task[]>;
 }
 
-function AddTaskContainer({ setTasks }: AddTaskContainerProps) {
+function AddTaskContainer({ setUpdateFunction }: AddTaskContainerProps) {
   const [newTask, setNewTask] = useState(''); //tracks new task input
   const [isBlank, setIsBlank] = useState(false); //tracks if input is blank on submit
 
@@ -33,7 +27,7 @@ function AddTaskContainer({ setTasks }: AddTaskContainerProps) {
       try {
         await addTask(newTask);
         const updatedTasks = await getTasks();
-        setTasks(updatedTasks);
+        setUpdateFunction(updatedTasks);
         setNewTask('');
       } catch (err) {
         console.error('Error submitting new task:', err);

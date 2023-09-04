@@ -1,22 +1,22 @@
-import { Task } from '../utils/types';
+import { Task, UpdateCallback } from '../utils/types';
 import { deleteSingleTask, getTasks, updateTask } from '../utils/api';
-import { Dispatch, SetStateAction } from 'react';
 import TaskItemUI from './TaskItemUI';
 
 interface TaskItemContainerProps {
   task: Task;
-  updateTaskData: Dispatch<SetStateAction<Task[]>>;
+  setUpdateFunction: UpdateCallback<Task[]>;
 }
 
-function TaskItemContainer({ task, updateTaskData }: TaskItemContainerProps) {
-  const taskIdentifier = `task-${task._id}`; // Unique ID for the input element
-
+function TaskItemContainer({
+  task,
+  setUpdateFunction,
+}: TaskItemContainerProps) {
   //Handle task completion change
   const handleTaskCompletionChange = async (taskId: string) => {
     try {
       await updateTask(taskId);
       const updatedTasks = await getTasks();
-      updateTaskData(updatedTasks);
+      setUpdateFunction(updatedTasks);
     } catch (err) {
       console.error('Error updating task:', err);
     }
@@ -27,7 +27,7 @@ function TaskItemContainer({ task, updateTaskData }: TaskItemContainerProps) {
     try {
       await deleteSingleTask(taskId);
       const updatedTasks = await getTasks();
-      updateTaskData(updatedTasks);
+      setUpdateFunction(updatedTasks);
     } catch (err) {
       console.error('Error deleting task:', err);
     }
@@ -36,7 +36,6 @@ function TaskItemContainer({ task, updateTaskData }: TaskItemContainerProps) {
   return (
     <>
       <TaskItemUI
-        taskIdentifier={taskIdentifier}
         task={task}
         handleTaskCompletionChange={handleTaskCompletionChange}
         handleSingleTaskDelete={handleSingleTaskDelete}

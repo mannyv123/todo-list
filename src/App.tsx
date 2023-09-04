@@ -11,10 +11,8 @@ function App() {
   const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
 
-  //Ref for modal to delete tasks
   const deleteModalRef = useRef<HTMLDialogElement>(null);
 
-  //Function to open modal
   const openDeleteModal = () => {
     deleteModalRef.current?.showModal();
   };
@@ -46,12 +44,12 @@ function App() {
       <DeleteModalContainer
         deleteModalRef={deleteModalRef}
         tasks={tasks}
-        setTasks={setTasks}
+        setUpdateFunction={setTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
         <HeaderUI openDeleteModal={openDeleteModal} />
         <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
-          <AddTaskContainer setTasks={setTasks} />
+          <AddTaskContainer setUpdateFunction={setTasks} />
           <input
             className="w-full border border-black rounded-md p-2"
             placeholder="Search.."
@@ -62,7 +60,7 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskListContainer tasks={filteredTasks} updateTaskData={setTasks} />
+        <TaskListContainer tasks={filteredTasks} setUpdateFunction={setTasks} />
       </div>
     </main>
   );

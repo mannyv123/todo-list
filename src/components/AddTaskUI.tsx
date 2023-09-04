@@ -27,9 +27,7 @@ function AddTaskUI({ isBlank, handleTaskInput, newTask }: AddTaskUIProps) {
           <div className="absolute text-sm md:text-base top-full text-red-600">
             Please fill in a description for the new task.
           </div>
-        ) : (
-          ''
-        )}
+        ) : null}
       </div>
       <button className="bg-cyan-300 hover:bg-cyan-100 rounded-md border border-black md:w-24 p-1">
         Add
