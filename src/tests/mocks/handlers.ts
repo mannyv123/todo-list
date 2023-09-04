@@ -8,25 +8,24 @@ export let mockPosts = [
     _id: '1',
     task: 'Task 1',
     completed: false,
-    createdAt: '2023-09-02T20:44:24.326Z',
-    updatedAt: '2023-09-02T20:44:24.326Z',
+    createdAt: new Date('2023-09-02T20:44:24.326Z'),
+    updatedAt: new Date('2023-09-02T20:44:24.326Z'),
   },
   {
     _id: '2',
     task: 'Task 2',
     completed: true,
-    createdAt: '2023-09-02T20:44:24.326Z',
-    updatedAt: '2023-09-02T20:44:24.326Z',
+    createdAt: new Date('2023-09-03T20:44:24.326Z'),
+    updatedAt: new Date('2023-09-03T20:44:24.326Z'),
   },
   {
     _id: '3',
     task: 'Task 3',
     completed: true,
-    createdAt: '2023-09-02T20:44:24.326Z',
-    updatedAt: '2023-09-02T20:44:24.326Z',
+    createdAt: new Date('2023-09-04T20:44:24.326Z'),
+    updatedAt: new Date('2023-09-04T20:44:24.326Z'),
   },
 ];
-console.log('handlers ran');
 
 //Handlers that catch the corresponding requests and returns the mock data
 export const handlers = [
@@ -36,14 +35,14 @@ export const handlers = [
   }),
   //Add new task endpoint
   rest.post(`${API_BASE_URL}/api/tasks/`, async (req, res, ctx) => {
-    const newTask = await req.json();
+    const newTask: string = await req.json();
     const newTaskId = String(mockPosts.length + 1);
     const taskToAdd = {
       _id: newTaskId,
       task: newTask,
       completed: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     mockPosts.push(taskToAdd);
     return res(ctx.status(201), ctx.json(taskToAdd));

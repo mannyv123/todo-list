@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { useTaskManager } from '../hooks/useTaskManager';
-import { mockPosts } from './mocks/handlers';
+import { useTaskManager } from './useTaskManager';
+import { mockPosts } from '../tests/mocks/handlers';
 
 describe('useTaskManager', () => {
   it('tasks state is initially empty array', () => {
@@ -13,7 +13,8 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     await waitFor(() => {
-      expect(result.current.tasks).toEqual(mockPosts);
+      const stringifiedMockPosts = JSON.stringify(mockPosts);
+      expect(result.current.tasks).toEqual(JSON.parse(stringifiedMockPosts));
     });
   });
 
@@ -22,11 +23,12 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      result.current.addNewTask(newTaskDesc);
+      void result.current.addNewTask(newTaskDesc);
     });
 
     await waitFor(() => {
-      expect(result.current.tasks).toEqual(mockPosts);
+      const stringifiedMockPosts = JSON.stringify(mockPosts);
+      expect(result.current.tasks).toEqual(JSON.parse(stringifiedMockPosts));
     });
   });
 
@@ -35,7 +37,7 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      result.current.updateTaskCompletion(taskIdToUpdate);
+      void result.current.updateTaskCompletion(taskIdToUpdate);
     });
 
     await waitFor(() => {
@@ -47,7 +49,7 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      result.current.deleteAllTasksHandler();
+      void result.current.deleteAllTasksHandler();
     });
 
     await waitFor(() => {
@@ -57,15 +59,16 @@ describe('useTaskManager', () => {
 
   it('deletes a single task and updates the tasks state', async () => {
     const taskIdToDelete = '1';
-
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      result.current.deleteSingleTaskHandler(taskIdToDelete);
+      void result.current.deleteSingleTaskHandler(taskIdToDelete);
     });
 
     await waitFor(() => {
-      expect(result.current.tasks).toEqual(mockPosts);
+      expect(result.current.tasks).not.toContainEqual(
+        expect.objectContaining({ _id: taskIdToDelete }),
+      );
     });
   });
 });
