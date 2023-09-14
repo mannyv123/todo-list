@@ -1,6 +1,6 @@
 import { describe, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import TaskItem from '../components/TaskItem/TaskItem';
+import TaskItem from '../components/TaskItemContainer';
 
 describe('TaskItem', () => {
   it('renders task item correctly', () => {
