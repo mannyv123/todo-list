@@ -1,10 +1,11 @@
-import { Task, UpdateCallback } from '../utils/types';
-import TaskItemContainer from './TaskItemContainer';
+import { Task } from '../../utils/types';
+import TaskItemContainer from '../TaskItemContainer';
 
 interface TaskListUIProps {
   incompletedTasks: Task[];
   completedTasks: Task[];
-  setUpdateFunction: UpdateCallback<Task[]>;
+  updateTaskCompletion: (taskId: string) => Promise<void>;
+  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 const COMPLETED_TASKS = 10; //number of completed tasks to show
@@ -12,7 +13,8 @@ const COMPLETED_TASKS = 10; //number of completed tasks to show
 function TaskListUI({
   incompletedTasks,
   completedTasks,
-  setUpdateFunction,
+  updateTaskCompletion,
+  deleteSingleTaskHandler,
 }: TaskListUIProps) {
   return (
     <>
@@ -23,7 +25,8 @@ function TaskListUI({
             <li key={task._id}>
               <TaskItemContainer
                 task={task}
-                setUpdateFunction={setUpdateFunction}
+                updateTaskCompletion={updateTaskCompletion}
+                deleteSingleTaskHandler={deleteSingleTaskHandler}
               />
             </li>
           ))}
@@ -36,7 +39,8 @@ function TaskListUI({
             <li key={task._id}>
               <TaskItemContainer
                 task={task}
-                setUpdateFunction={setUpdateFunction}
+                updateTaskCompletion={updateTaskCompletion}
+                deleteSingleTaskHandler={deleteSingleTaskHandler}
               />
             </li>
           ))}

@@ -1,9 +1,10 @@
-import { Task, UpdateCallback } from '../utils/types';
-import TaskListUI from './TaskListUI';
+import { Task } from '../../utils/types';
+import TaskListUI from '../TaskListUI/TaskListUI';
 
 interface TaskListContainerProps {
   tasks: Task[];
-  setUpdateFunction: UpdateCallback<Task[]>;
+  updateTaskCompletion: (taskId: string) => Promise<void>;
+  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 //Helper function to filter tasks by completion status
@@ -13,10 +14,12 @@ const filterTasksByCompletionStatus = (tasks: Task[], completed: boolean) => {
 
 function TaskListContainer({
   tasks,
-  setUpdateFunction,
+  updateTaskCompletion,
+  deleteSingleTaskHandler,
 }: TaskListContainerProps) {
   //Filter for incompleted tasks
   const incompletedTasks = filterTasksByCompletionStatus(tasks, false);
+
   //Filter for completed tasks and sort latest to oldest
   const completedTasks = filterTasksByCompletionStatus(tasks, true).sort(
     (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
@@ -27,7 +30,8 @@ function TaskListContainer({
       <TaskListUI
         incompletedTasks={incompletedTasks}
         completedTasks={completedTasks}
-        setUpdateFunction={setUpdateFunction}
+        updateTaskCompletion={updateTaskCompletion}
+        deleteSingleTaskHandler={deleteSingleTaskHandler}
       />
     </section>
   );

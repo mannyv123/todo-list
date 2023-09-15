@@ -1,28 +1,22 @@
 import { RefObject } from 'react';
-import { Task, UpdateCallback } from '../utils/types';
-import { deleteAllTasks } from '../utils/api';
+import { Task } from '../utils/types';
 import DeleteModalUI from './DeleteModalUI';
 
 interface DeleteModalContainerProps {
   deleteModalRef: RefObject<HTMLDialogElement>;
   tasks: Task[];
-  setUpdateFunction: UpdateCallback<Task[]>;
+  deleteAll: () => Promise<void>;
 }
 
 function DeleteModalContainer({
   deleteModalRef,
   tasks,
-  setUpdateFunction,
+  deleteAll,
 }: DeleteModalContainerProps) {
   //Handle deleting all tasks
-  const handleDeleteAll = async () => {
-    try {
-      await deleteAllTasks();
-      setUpdateFunction([]);
-      deleteModalRef.current?.close();
-    } catch (err) {
-      console.error('Error deleting all tasks:', err);
-    }
+  const handleTasksDelete = async () => {
+    await deleteAll();
+    deleteModalRef.current?.close();
   };
 
   //Handle closing the modal when it's open
@@ -39,7 +33,7 @@ function DeleteModalContainer({
       className="w-full md:w-[60vw] lg:w-[40vw] h-full md:h-[30vh] rounded-lg p-2 md:p-6"
     >
       <DeleteModalUI
-        handleDeleteAll={handleDeleteAll}
+        handleDeleteAll={handleTasksDelete}
         handleCloseModal={handleCloseModal}
         hasTasks={hasTasks}
       />

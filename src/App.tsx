@@ -1,28 +1,27 @@
 import './App.css';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { getTasks } from './utils/api';
-import { Task } from './utils/types';
-import TaskListContainer from './components/TaskListContainer';
+import { ChangeEvent, useRef, useState } from 'react';
+import TaskListContainer from './components/TaskListContainer/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
-import AddTaskContainer from './components/AddTaskContainer';
+import AddTaskContainer from './components/AddTaskContainer/AddTaskContainer';
 import HeaderUI from './components/HeaderUI';
+import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]); //holds array of all tasks
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
+
+  const {
+    tasks,
+    addNewTask,
+    updateTaskCompletion,
+    deleteAllTasksHandler,
+    deleteSingleTaskHandler,
+  } = useTaskManager();
 
   const deleteModalRef = useRef<HTMLDialogElement>(null);
 
   const openDeleteModal = () => {
     deleteModalRef.current?.showModal();
   };
-
-  //Load tasks on mount
-  useEffect(() => {
-    getTasks()
-      .then((data) => setTasks(data))
-      .catch((err) => console.error(`Error fetching tasks: ${err}`));
-  }, []);
 
   //Handle search input
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -43,13 +42,13 @@ function App() {
     <main>
       <DeleteModalContainer
         deleteModalRef={deleteModalRef}
+        deleteAll={deleteAllTasksHandler}
         tasks={tasks}
-        setUpdateFunction={setTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
         <HeaderUI openDeleteModal={openDeleteModal} />
         <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
-          <AddTaskContainer setUpdateFunction={setTasks} />
+          <AddTaskContainer addNew={addNewTask} />
           <input
             className="w-full border border-black rounded-md p-2"
             placeholder="Search.."
@@ -60,7 +59,11 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskListContainer tasks={filteredTasks} setUpdateFunction={setTasks} />
+        <TaskListContainer
+          tasks={filteredTasks}
+          updateTaskCompletion={updateTaskCompletion}
+          deleteSingleTaskHandler={deleteSingleTaskHandler}
+        />
       </div>
     </main>
   );
