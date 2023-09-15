@@ -1,9 +1,10 @@
 import { describe, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import TaskItem from '../TaskItem/TaskItem';
-import { mockPosts } from '../../tests/mocks/handlers';
+import { mockPosts } from '../tests/mocks/handlers';
+import { Task } from '../utils/types';
 
-const mockTask = mockPosts[0];
+const mockTask: Task = mockPosts[0];
 
 describe('TaskItem', () => {
   it('renders task item correctly', () => {
