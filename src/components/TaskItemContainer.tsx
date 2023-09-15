@@ -1,5 +1,5 @@
 import { Task } from '../utils/types';
-import TaskItemUI from './TaskItemUI';
+import TaskItemUI from './TaskItemUI/TaskItemUI';
 
 interface TaskItemContainerProps {
   task: Task;

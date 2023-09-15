@@ -1,5 +1,5 @@
-import deleteIcon from '../assets/icon-delete.svg';
-import { Task } from '../utils/types';
+import deleteIcon from '../../assets/icon-delete.svg';
+import { Task } from '../../utils/types';
 
 interface TaskItemUIProps {
   task: Task;

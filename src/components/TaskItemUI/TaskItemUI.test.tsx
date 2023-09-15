@@ -1,8 +1,8 @@
 import { describe, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import TaskItem from '../components/TaskItemContainer';
+import TaskItemUI from './TaskItemUI';
 
-describe('TaskItem', () => {
+describe('TaskItemUI', () => {
   it('renders task item correctly', () => {
     const task = {
       _id: '1',
@@ -16,7 +16,7 @@ describe('TaskItem', () => {
     const handleSingleTaskDelete = vi.fn();
 
     render(
-      <TaskItem
+      <TaskItemUI
         task={task}
         handleTaskCompletionChange={handleTaskCompletionChange}
         handleSingleTaskDelete={handleSingleTaskDelete}
