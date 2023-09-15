@@ -1,5 +1,5 @@
-import { Task } from '../utils/types';
-import TaskListUI from './TaskListUI';
+import { Task } from '../../utils/types';
+import TaskListUI from '../TaskListUI/TaskListUI';
 
 interface TaskListContainerProps {
   tasks: Task[];

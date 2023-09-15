@@ -1,16 +1,20 @@
 import { describe, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import TaskList from '../TaskList/TaskList';
+import TaskListUI from './TaskListUI';
 import { mockPosts } from '../../tests/mocks/handlers';
 
-describe('TaskList', () => {
+const incompletedTasks = mockPosts.filter((task) => task.completed === false);
+const completedTasks = mockPosts.filter((task) => task.completed === true);
+
+describe('TaskListUI', () => {
   it('renders headings correclty', () => {
     const updateTaskCompletion = vi.fn();
     const deleteSingleTaskHandler = vi.fn();
 
     render(
-      <TaskList
-        tasks={mockPosts}
+      <TaskListUI
+        incompletedTasks={incompletedTasks}
+        completedTasks={completedTasks}
         updateTaskCompletion={updateTaskCompletion}
         deleteSingleTaskHandler={deleteSingleTaskHandler}
       />,
@@ -28,19 +32,15 @@ describe('TaskList', () => {
     const deleteSingleTaskHandler = vi.fn();
 
     render(
-      <TaskList
-        tasks={mockPosts}
+      <TaskListUI
+        incompletedTasks={incompletedTasks}
+        completedTasks={completedTasks}
         updateTaskCompletion={updateTaskCompletion}
         deleteSingleTaskHandler={deleteSingleTaskHandler}
       />,
     );
 
-    const incompleteTasks = screen.getAllByRole('checkbox', {
-      checked: false,
-    });
-    const completedTasks = screen.getAllByRole('checkbox', { checked: true });
-
-    expect(incompleteTasks).toHaveLength(1);
+    expect(incompletedTasks).toHaveLength(1);
     expect(completedTasks).toHaveLength(2);
   });
 });

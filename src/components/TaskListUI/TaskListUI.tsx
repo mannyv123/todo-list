@@ -1,5 +1,5 @@
-import { Task } from '../utils/types';
-import TaskItemContainer from './TaskItemContainer';
+import { Task } from '../../utils/types';
+import TaskItemContainer from '../TaskItemContainer';
 
 interface TaskListUIProps {
   incompletedTasks: Task[];
