@@ -1,5 +1,5 @@
 import './App.css';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, RefObject, useState } from 'react';
 import TaskListContainer from './components/TaskListContainer/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
 import AddTaskContainer from './components/AddTaskContainer/AddTaskContainer';
@@ -8,6 +8,7 @@ import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const {
     tasks,
@@ -17,10 +18,19 @@ function App() {
     deleteSingleTaskHandler,
   } = useTaskManager();
 
-  const deleteModalRef = useRef<HTMLDialogElement>(null);
-
   const openDeleteModal = () => {
-    deleteModalRef.current?.showModal();
+    setIsModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModal = (modalRef: RefObject<HTMLDialogElement>) => {
+    if (isModalOpen === true) {
+      modalRef.current?.showModal();
+    } else {
+      modalRef.current?.close();
+    }
   };
 
   //Handle search input
@@ -41,7 +51,8 @@ function App() {
   return (
     <main>
       <DeleteModalContainer
-        deleteModalRef={deleteModalRef}
+        closeDeleteModal={closeDeleteModal}
+        handleModal={handleModal}
         deleteAll={deleteAllTasksHandler}
         tasks={tasks}
       />
