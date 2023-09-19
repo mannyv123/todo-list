@@ -1,5 +1,5 @@
 import './App.css';
-import { ChangeEvent, RefObject, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import TaskListContainer from './components/TaskListContainer/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
 import AddTaskContainer from './components/AddTaskContainer/AddTaskContainer';
@@ -25,14 +25,6 @@ function App() {
     setIsModalOpen(false);
   };
 
-  const handleModal = (modalRef: RefObject<HTMLDialogElement>) => {
-    if (isModalOpen === true) {
-      modalRef.current?.showModal();
-    } else {
-      modalRef.current?.close();
-    }
-  };
-
   //Handle search input
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
@@ -51,8 +43,8 @@ function App() {
   return (
     <main>
       <DeleteModalContainer
+        isModalOpen={isModalOpen}
         closeDeleteModal={closeDeleteModal}
-        handleModal={handleModal}
         deleteAll={deleteAllTasksHandler}
         tasks={tasks}
       />

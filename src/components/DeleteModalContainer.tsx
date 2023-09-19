@@ -1,23 +1,29 @@
-import { RefObject, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Task } from '../utils/types';
 import DeleteModalUI from './DeleteModalUI';
 
 interface DeleteModalContainerProps {
-  handleModal: (modalRef: RefObject<HTMLDialogElement>) => void;
+  isModalOpen: boolean;
   closeDeleteModal: () => void;
   tasks: Task[];
   deleteAll: () => Promise<void>;
 }
 
 function DeleteModalContainer({
-  handleModal,
+  isModalOpen,
   closeDeleteModal,
   tasks,
   deleteAll,
 }: DeleteModalContainerProps) {
   const deleteModalRef = useRef<HTMLDialogElement>(null);
 
-  handleModal(deleteModalRef);
+  useEffect(() => {
+    if (isModalOpen) {
+      deleteModalRef.current?.showModal();
+    } else {
+      deleteModalRef.current?.close();
+    }
+  }, [isModalOpen]);
 
   //Handle deleting all tasks
   const handleTasksDelete = async () => {
