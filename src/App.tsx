@@ -10,6 +10,7 @@ function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
 
   const {
+    tasksQuery,
     tasks,
     addNewTask,
     updateTaskCompletion,
@@ -29,7 +30,7 @@ function App() {
   };
 
   //Handle search filtering of tasks
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = tasksQuery.data?.filter((task) => {
     if (searchInput === '') {
       return task;
     }

@@ -2,13 +2,16 @@ import { Task } from '../../utils/types';
 import TaskListUI from '../TaskListUI/TaskListUI';
 
 interface TaskListContainerProps {
-  tasks: Task[];
+  tasks: Task[] | undefined;
   updateTaskCompletion: (taskId: string) => Promise<void>;
   deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 //Helper function to filter tasks by completion status
-const filterTasksByCompletionStatus = (tasks: Task[], completed: boolean) => {
+const filterTasksByCompletionStatus = (
+  tasks: Task[] = [],
+  completed: boolean,
+) => {
   return tasks.filter((task) => task.completed === completed);
 };
 
