@@ -3,8 +3,8 @@ import { Task } from '../../utils/types';
 
 interface TaskItemUIProps {
   task: Task;
-  handleTaskCompletionChange: (taskId: string) => Promise<void>;
-  handleSingleTaskDelete: (taskId: string) => Promise<void>;
+  handleTaskCompletionChange: (taskId: string) => void;
+  handleSingleTaskDelete: (taskId: string) => void;
 }
 
 function TaskItemUI({

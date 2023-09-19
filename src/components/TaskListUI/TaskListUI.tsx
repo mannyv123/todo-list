@@ -4,18 +4,11 @@ import TaskItemContainer from '../TaskItemContainer';
 interface TaskListUIProps {
   incompletedTasks: Task[];
   completedTasks: Task[];
-  updateTaskCompletion: (taskId: string) => Promise<void>;
-  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 const COMPLETED_TASKS = 10; //number of completed tasks to show
 
-function TaskListUI({
-  incompletedTasks,
-  completedTasks,
-  updateTaskCompletion,
-  deleteSingleTaskHandler,
-}: TaskListUIProps) {
+function TaskListUI({ incompletedTasks, completedTasks }: TaskListUIProps) {
   return (
     <>
       <div className="w-full md:w-1/2">
@@ -23,11 +16,7 @@ function TaskListUI({
         <ul>
           {incompletedTasks.map((task) => (
             <li key={task._id}>
-              <TaskItemContainer
-                task={task}
-                updateTaskCompletion={updateTaskCompletion}
-                deleteSingleTaskHandler={deleteSingleTaskHandler}
-              />
+              <TaskItemContainer task={task} />
             </li>
           ))}
         </ul>
@@ -37,11 +26,7 @@ function TaskListUI({
         <ul>
           {completedTasks.slice(0, COMPLETED_TASKS).map((task) => (
             <li key={task._id}>
-              <TaskItemContainer
-                task={task}
-                updateTaskCompletion={updateTaskCompletion}
-                deleteSingleTaskHandler={deleteSingleTaskHandler}
-              />
+              <TaskItemContainer task={task} />
             </li>
           ))}
           {completedTasks.length > COMPLETED_TASKS ? <li>...</li> : null}

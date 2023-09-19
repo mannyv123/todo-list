@@ -1,13 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import AddTaskUI from '../AddTaskUI/AddTaskUI';
+import { useTaskManager } from '../../hooks/useTaskManager';
 
-interface AddTaskContainerProps {
-  addNew: (taskDescription: string) => Promise<void>;
-}
-
-function AddTaskContainer({ addNew }: AddTaskContainerProps) {
+function AddTaskContainer() {
   const [newTask, setNewTask] = useState(''); //tracks new task input
   const [isBlank, setIsBlank] = useState(false); //tracks if input is blank on submit
+
+  const { createTaskMutation } = useTaskManager();
 
   //Handle input for new task
   const handleTaskInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,12 +17,12 @@ function AddTaskContainer({ addNew }: AddTaskContainerProps) {
   };
 
   //Handle new task submission
-  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!isBlank && newTask !== '') {
       try {
-        await addNew(newTask);
+        createTaskMutation.mutate(newTask);
         setNewTask('');
       } catch (err) {
         console.error('Error submitting new task:', err);

@@ -1,21 +1,22 @@
 import { RefObject } from 'react';
 import { Task } from '../utils/types';
 import DeleteModalUI from './DeleteModalUI';
+import { useTaskManager } from '../hooks/useTaskManager';
 
 interface DeleteModalContainerProps {
   deleteModalRef: RefObject<HTMLDialogElement>;
   tasks: Task[];
-  deleteAll: () => Promise<void>;
 }
 
 function DeleteModalContainer({
   deleteModalRef,
   tasks,
-  deleteAll,
 }: DeleteModalContainerProps) {
+  const { deleteAllTasksMutation } = useTaskManager();
+
   //Handle deleting all tasks
-  const handleTasksDelete = async () => {
-    await deleteAll();
+  const handleTasksDelete = () => {
+    deleteAllTasksMutation.mutate();
     deleteModalRef.current?.close();
   };
 

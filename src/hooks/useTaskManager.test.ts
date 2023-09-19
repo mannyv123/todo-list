@@ -6,7 +6,7 @@ import { mockPosts } from '../tests/mocks/handlers';
 describe('useTaskManager', () => {
   it('tasks state is initially empty array', () => {
     const { result } = renderHook(() => useTaskManager());
-    expect(result.current.tasks).toEqual([]);
+    expect(result.current.tasksQuery.data).toEqual([]);
   });
 
   it('fetches task data from the API and updates the tasks state', async () => {
@@ -14,7 +14,9 @@ describe('useTaskManager', () => {
 
     await waitFor(() => {
       const stringifiedMockPosts = JSON.stringify(mockPosts);
-      expect(result.current.tasks).toEqual(JSON.parse(stringifiedMockPosts));
+      expect(result.current.tasksQuery.data).toEqual(
+        JSON.parse(stringifiedMockPosts),
+      );
     });
   });
 
@@ -23,12 +25,14 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      void result.current.addNewTask(newTaskDesc);
+      void result.current.createTaskMutation.mutate(newTaskDesc);
     });
 
     await waitFor(() => {
       const stringifiedMockPosts = JSON.stringify(mockPosts);
-      expect(result.current.tasks).toEqual(JSON.parse(stringifiedMockPosts));
+      expect(result.current.tasksQuery.data).toEqual(
+        JSON.parse(stringifiedMockPosts),
+      );
     });
   });
 
@@ -37,11 +41,13 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      void result.current.updateTaskCompletion(taskIdToUpdate);
+      void result.current.updateTaskCompletionMutation.mutate(taskIdToUpdate);
     });
 
     await waitFor(() => {
-      expect(result.current.tasks[0].completed).toEqual(true);
+      if (result.current.tasksQuery.data) {
+        expect(result.current.tasksQuery.data[0].completed).toEqual(true);
+      }
     });
   });
 
@@ -49,11 +55,11 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      void result.current.deleteAllTasksHandler();
+      void result.current.deleteAllTasksMutation.mutate();
     });
 
     await waitFor(() => {
-      expect(result.current.tasks).toEqual([]);
+      expect(result.current.tasksQuery.data).toEqual([]);
     });
   });
 
@@ -62,11 +68,11 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager());
 
     act(() => {
-      void result.current.deleteSingleTaskHandler(taskIdToDelete);
+      void result.current.deleteSingleTaskMutation.mutate(taskIdToDelete);
     });
 
     await waitFor(() => {
-      expect(result.current.tasks).not.toContainEqual(
+      expect(result.current.tasksQuery.data).not.toContainEqual(
         expect.objectContaining({ _id: taskIdToDelete }),
       );
     });
