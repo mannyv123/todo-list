@@ -39,10 +39,21 @@ export function useTaskManager() {
           updatedAt: new Date(),
         };
 
-        queryClient.setQueryData<Task[]>(
-          ['tasks'],
-          [newTaskObj, ...previousTasks],
-        );
+        const updatedTasks: Task[] = [...previousTasks, newTaskObj];
+        updatedTasks.sort((a, b) => {
+          const taskA = a.task.toLocaleLowerCase();
+          const taskB = b.task.toLocaleLowerCase();
+
+          if (taskA < taskB) {
+            return -1;
+          }
+          if (taskA > taskB) {
+            return 1;
+          }
+          return 0;
+        });
+
+        queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
 
         return { previousTasks };
       }
