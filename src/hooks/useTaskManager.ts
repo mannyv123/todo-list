@@ -6,6 +6,7 @@ import {
   updateTask,
 } from '../utils/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Task } from '../utils/types';
 
 export function useTaskManager() {
   const queryClient = useQueryClient();
@@ -21,8 +22,42 @@ export function useTaskManager() {
   //Query to create new task
   const createTaskMutation = useMutation({
     mutationFn: addTask,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['tasks']);
+    onMutate: async (newTask: string) => {
+      //Cancel any outgoing refetches (so that they don't overwrite the optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot the previous value
+      const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+
+      //Optimistically update to the new value
+      if (previousTasks) {
+        const newTaskObj: Task = {
+          _id: Math.random().toString(),
+          task: newTask,
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        queryClient.setQueryData<Task[]>(
+          ['tasks'],
+          [newTaskObj, ...previousTasks],
+        );
+
+        return { previousTasks };
+      }
+    },
+
+    //If the mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 
