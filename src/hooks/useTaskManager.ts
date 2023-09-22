@@ -16,6 +16,8 @@ export function useTaskManager() {
     queryFn: getTasks,
   });
 
+  const tasksData = tasksQuery.data ? tasksQuery.data : [];
+
   //Query to create new task
   const createTaskMutation = useMutation({
     mutationFn: addTask,
@@ -49,7 +51,7 @@ export function useTaskManager() {
   });
 
   return {
-    tasksQuery,
+    tasksData,
     createTaskMutation,
     updateTaskCompletionMutation,
     deleteAllTasksMutation,

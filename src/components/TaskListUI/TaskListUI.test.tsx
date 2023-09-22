@@ -1,23 +1,38 @@
-import { describe, it, vi } from 'vitest';
+import { describe, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import TaskListUI from './TaskListUI';
 import { mockPosts } from '../../tests/mocks/handlers';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactNode } from 'react';
 
 const incompletedTasks = mockPosts.filter((task) => task.completed === false);
 const completedTasks = mockPosts.filter((task) => task.completed === true);
 
 describe('TaskListUI', () => {
+  const createWrapper = () => {
+    // creates a new QueryClient for each test
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    return function QueryClientProviderWrapper({
+      children,
+    }: {
+      children: ReactNode;
+    }) {
+      return (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      );
+    };
+  };
   it('renders headings correclty', () => {
-    const updateTaskCompletion = vi.fn();
-    const deleteSingleTaskHandler = vi.fn();
-
     render(
       <TaskListUI
         incompletedTasks={incompletedTasks}
         completedTasks={completedTasks}
-        updateTaskCompletion={updateTaskCompletion}
-        deleteSingleTaskHandler={deleteSingleTaskHandler}
       />,
+      { wrapper: createWrapper() },
     );
 
     const todoList = screen.getByRole('heading', { name: /to do/i });
@@ -28,16 +43,12 @@ describe('TaskListUI', () => {
   });
 
   it('renders the correct amount of tasks for each section', () => {
-    const updateTaskCompletion = vi.fn();
-    const deleteSingleTaskHandler = vi.fn();
-
     render(
       <TaskListUI
         incompletedTasks={incompletedTasks}
         completedTasks={completedTasks}
-        updateTaskCompletion={updateTaskCompletion}
-        deleteSingleTaskHandler={deleteSingleTaskHandler}
       />,
+      { wrapper: createWrapper() },
     );
 
     expect(incompletedTasks).toHaveLength(1);

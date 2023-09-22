@@ -9,9 +9,7 @@ import { useTaskManager } from './hooks/useTaskManager';
 function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
 
-  const { tasksQuery } = useTaskManager();
-
-  const tasksData = tasksQuery.data ? tasksQuery.data : [];
+  const { tasksData } = useTaskManager();
 
   const deleteModalRef = useRef<HTMLDialogElement>(null);
 
