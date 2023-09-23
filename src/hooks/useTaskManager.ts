@@ -11,13 +11,19 @@ import { Task } from '../utils/types';
 export function useTaskManager() {
   const queryClient = useQueryClient();
 
+  //function to snapshot original state of tasks data before optimistically updating
+  const prevTasksState = () => {
+    return queryClient.getQueryData<Task[]>(['tasks']);
+  };
+
   //Query to get all tasks
   const tasksQuery = useQuery({
     queryKey: ['tasks'],
     queryFn: getTasks,
+    initialData: [],
   });
 
-  const tasksData = tasksQuery.data ? tasksQuery.data : [];
+  const tasksData = tasksQuery.data;
 
   //Query to create new task
   const createTaskMutation = useMutation({
@@ -27,7 +33,7 @@ export function useTaskManager() {
       await queryClient.cancelQueries({ queryKey: ['tasks'] });
 
       //Snapshot the previous value
-      const previousTasks = queryClient.getQueryData<Task[]>(['tasks']);
+      const previousTasks = prevTasksState();
 
       //Optimistically update to the new value
       if (previousTasks) {
@@ -75,8 +81,33 @@ export function useTaskManager() {
   //Query to update task completion status
   const updateTaskCompletionMutation = useMutation({
     mutationFn: updateTask,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['tasks']);
+    onMutate: async (taskId: string) => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot previous value
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to new value
+      const updatedTasks = previousTasks?.map((task) =>
+        task._id === taskId
+          ? { ...task, completed: !task.completed, updatedAt: new Date() }
+          : task,
+      );
+
+      queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
+
+      return { previousTasks };
+    },
+    //If mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 
