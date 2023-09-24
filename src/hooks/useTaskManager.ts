@@ -114,15 +114,52 @@ export function useTaskManager() {
   //Query to delete all tasks
   const deleteAllTasksMutation = useMutation({
     mutationFn: deleteAllTasks,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['tasks']);
+    onMutate: async () => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot the previous tasks
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to delete all tasks
+      queryClient.setQueryData<Task[]>(['tasks'], []);
+
+      return { previousTasks };
+    },
+    //If mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
 
   //Query to delete specific task
   const deleteSingleTaskMutation = useMutation({
     mutationFn: deleteSingleTask,
-    onSuccess: async () => {
+    onMutate: async (taskId: string) => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot the previous tasks data
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to the new data
+      const updatedTasks = previousTasks?.filter((task) => taskId !== task._id);
+      queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
+
+      return { previousTasks };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    onSettled: async () => {
       await queryClient.invalidateQueries(['tasks']);
     },
   });
