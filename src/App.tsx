@@ -8,7 +8,7 @@ import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     tasks,
