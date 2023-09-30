@@ -23,7 +23,20 @@ export function useTaskManager() {
     initialData: [],
   });
 
-  const tasksData = tasksQuery.data;
+  const filterTasks = (searchInput: string) => {
+    const filteredTaskData = tasksQuery.data.filter((task) => {
+      if (searchInput === '') {
+        return task;
+      }
+
+      const lowerCasedSearch = searchInput.toLowerCase();
+      const taskContent = task.task.toLowerCase();
+
+      return taskContent.includes(lowerCasedSearch);
+    });
+
+    return filteredTaskData;
+  };
 
   //Query to create new task
   const createTaskMutation = useMutation({
@@ -165,7 +178,7 @@ export function useTaskManager() {
   });
 
   return {
-    tasksData,
+    filterTasks,
     createTaskMutation,
     updateTaskCompletionMutation,
     deleteAllTasksMutation,
