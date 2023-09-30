@@ -1,28 +1,35 @@
-import { RefObject } from 'react';
+import { useEffect, useRef } from 'react';
 import { Task } from '../utils/types';
 import DeleteModalUI from './DeleteModalUI';
 import { useTaskManager } from '../hooks/useTaskManager';
 
 interface DeleteModalContainerProps {
-  deleteModalRef: RefObject<HTMLDialogElement>;
+  isModalOpen: boolean;
+  closeDeleteModal: () => void;
   tasks: Task[];
 }
 
 function DeleteModalContainer({
-  deleteModalRef,
+  isModalOpen,
+  closeDeleteModal,
   tasks,
 }: DeleteModalContainerProps) {
   const { deleteAllTasksMutation } = useTaskManager();
 
+  const deleteModalRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      deleteModalRef.current?.showModal();
+    } else {
+      deleteModalRef.current?.close();
+    }
+  }, [isModalOpen]);
+
   //Handle deleting all tasks
   const handleTasksDelete = () => {
     deleteAllTasksMutation.mutate();
-    deleteModalRef.current?.close();
-  };
-
-  //Handle closing the modal when it's open
-  const handleCloseModal = () => {
-    deleteModalRef.current?.close();
+    closeDeleteModal();
   };
 
   //Boolean to conditionally render options in modal
@@ -35,7 +42,7 @@ function DeleteModalContainer({
     >
       <DeleteModalUI
         handleDeleteAll={handleTasksDelete}
-        handleCloseModal={handleCloseModal}
+        handleCloseModal={closeDeleteModal}
         hasTasks={hasTasks}
       />
     </dialog>

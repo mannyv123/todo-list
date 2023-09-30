@@ -1,5 +1,5 @@
 import './App.css';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import TaskListContainer from './components/TaskListContainer/TaskListContainer';
 import DeleteModalContainer from './components/DeleteModalContainer';
 import AddTaskContainer from './components/AddTaskContainer/AddTaskContainer';
@@ -8,15 +8,17 @@ import { useTaskManager } from './hooks/useTaskManager';
 
 function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { filterTasks } = useTaskManager();
 
   const filteredTasks = filterTasks(searchInput);
 
-  const deleteModalRef = useRef<HTMLDialogElement>(null);
-
   const openDeleteModal = () => {
-    deleteModalRef.current?.showModal();
+    setIsModalOpen(true);
+  };
+  const closeDeleteModal = () => {
+    setIsModalOpen(false);
   };
 
   //Handle search input
@@ -27,7 +29,8 @@ function App() {
   return (
     <main>
       <DeleteModalContainer
-        deleteModalRef={deleteModalRef}
+        isModalOpen={isModalOpen}
+        closeDeleteModal={closeDeleteModal}
         tasks={filteredTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
