@@ -1,30 +1,12 @@
 import { describe, it } from 'vitest';
 import AddTaskContainer from './AddTaskContainer';
-import { render, screen } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactNode } from 'react';
+import { screen } from '@testing-library/react';
+
+import { customRender } from '../../tests/test-utils';
 
 describe('AddTaskContainer', () => {
-  const createWrapper = () => {
-    // creates a new QueryClient for each test
-    const queryClient = new QueryClient({
-      defaultOptions: { queries: { retry: false } },
-    });
-    return function QueryClientProviderWrapper({
-      children,
-    }: {
-      children: ReactNode;
-    }) {
-      return (
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
-      );
-    };
-  };
-
   it('to have been rendered correctly', () => {
-    render(<AddTaskContainer />, { wrapper: createWrapper() });
+    customRender(<AddTaskContainer />);
 
     const inputElement = screen.getByPlaceholderText('New task..');
 

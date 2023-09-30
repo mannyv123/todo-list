@@ -28,7 +28,7 @@ describe('useTaskManager', () => {
     const { result } = renderHook(() => useTaskManager(), {
       wrapper: createWrapper(),
     });
-    expect(result.current.tasksData).toEqual([]);
+    expect(result.current.filterTasks('')).toEqual([]);
   });
 
   it('fetches task data from the API and updates the tasks state', async () => {
@@ -38,7 +38,7 @@ describe('useTaskManager', () => {
 
     await waitFor(() => {
       const stringifiedMockPosts = JSON.stringify(mockPosts);
-      expect(result.current.tasksData).toEqual(
+      expect(result.current.filterTasks('')).toEqual(
         JSON.parse(stringifiedMockPosts),
       );
     });
@@ -56,7 +56,7 @@ describe('useTaskManager', () => {
 
     await waitFor(() => {
       const stringifiedMockPosts = JSON.stringify(mockPosts);
-      expect(result.current.tasksData).toEqual(
+      expect(result.current.filterTasks('')).toEqual(
         JSON.parse(stringifiedMockPosts),
       );
     });
@@ -89,7 +89,7 @@ describe('useTaskManager', () => {
 
     await waitFor(() => {
       const stringifiedMockPosts = JSON.stringify(mockPosts);
-      expect(result.current.tasksData).toEqual(
+      expect(result.current.filterTasks('')).toEqual(
         JSON.parse(stringifiedMockPosts),
       );
     });
@@ -105,7 +105,7 @@ describe('useTaskManager', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.tasksData).toEqual([]);
+      expect(result.current.filterTasks('')).toEqual([]);
     });
   });
 });
