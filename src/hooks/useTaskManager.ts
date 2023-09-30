@@ -20,11 +20,10 @@ export function useTaskManager() {
   const tasksQuery = useQuery({
     queryKey: ['tasks'],
     queryFn: getTasks,
-    initialData: [],
   });
 
   const filterTasks = (searchInput: string) => {
-    const filteredTaskData = tasksQuery.data.filter((task) => {
+    const filteredTaskData = tasksQuery?.data?.filter((task) => {
       if (searchInput === '') {
         return task;
       }
@@ -35,7 +34,7 @@ export function useTaskManager() {
       return taskContent.includes(lowerCasedSearch);
     });
 
-    return filteredTaskData;
+    return filteredTaskData ? filteredTaskData : [];
   };
 
   //Query to create new task
