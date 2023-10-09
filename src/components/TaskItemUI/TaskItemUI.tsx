@@ -1,5 +1,5 @@
-import deleteIcon from '../../assets/icon-delete.svg';
 import { Task } from '../../utils/types';
+import { MdDeleteOutline, MdOutlineModeEdit } from 'react-icons/md';
 
 interface TaskItemUIProps {
   task: Task;
@@ -27,12 +27,18 @@ function TaskItemUI({
           {task.task}
         </label>
       </div>
-      <img
-        className="lg:hidden group-hover:block w-3 hover:w-4 cursor-pointer"
-        src={deleteIcon}
-        alt="delete"
-        onClick={() => void handleSingleTaskDelete(task._id)}
-      />
+      <div className="flex justify-center items-center cursor-pointer lg:hidden group-hover:block hover:scale-110">
+        <MdOutlineModeEdit
+          size={'1.5rem'}
+          // onClick={() => void handleSingleTaskDelete(task._id)}
+        />
+      </div>
+      <div className="flex justify-center items-center cursor-pointer lg:hidden group-hover:block hover:scale-110">
+        <MdDeleteOutline
+          size={'1.5rem'}
+          onClick={() => void handleSingleTaskDelete(task._id)}
+        />
+      </div>
     </div>
   );
 }
