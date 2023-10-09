@@ -81,3 +81,23 @@ export const deleteSingleTask = async (taskId: string) => {
     throw new Error(`Error deleting task: ${(err as Error).message}`);
   }
 };
+
+//Edit a task
+export const editTask = async (taskId: string, taskDesc: string) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${taskId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        taskDesc,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error editing task: ${response.statusText}`);
+    }
+
+    return (await response.json()) as Task;
+  } catch (err) {
+    throw new Error(`Error editing task: ${(err as Error).message}`);
+  }
+};

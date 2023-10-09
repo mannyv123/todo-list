@@ -4,6 +4,7 @@ import {
   addTask,
   deleteAllTasks,
   deleteSingleTask,
+  editTask,
   getTasks,
   updateTask,
 } from '../utils/api';
@@ -65,11 +66,22 @@ export function useTaskManager() {
     }
   };
 
+  // Edit a task
+  const editSingleTask = async (taskId: string, taskDesc: string) => {
+    try {
+      await editTask(taskId, taskDesc);
+      await fetchTasks(setTasks);
+    } catch (err) {
+      console.error('Error editing task: ', err);
+    }
+  };
+
   return {
     tasks,
     addNewTask,
     updateTaskCompletion,
     deleteAllTasksHandler,
     deleteSingleTaskHandler,
+    editSingleTask,
   };
 }
