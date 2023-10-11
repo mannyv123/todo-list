@@ -1,20 +1,21 @@
 import { useEffect, useRef } from 'react';
 import { Task } from '../utils/types';
 import DeleteModalUI from './DeleteModalUI';
+import { useTaskManager } from '../hooks/useTaskManager';
 
 interface DeleteModalContainerProps {
   isModalOpen: boolean;
   closeDeleteModal: () => void;
   tasks: Task[];
-  deleteAll: () => Promise<void>;
 }
 
 function DeleteModalContainer({
   isModalOpen,
   closeDeleteModal,
   tasks,
-  deleteAll,
 }: DeleteModalContainerProps) {
+  const { deleteAllTasksMutation } = useTaskManager();
+
   const deleteModalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -26,8 +27,8 @@ function DeleteModalContainer({
   }, [isModalOpen]);
 
   //Handle deleting all tasks
-  const handleTasksDelete = async () => {
-    await deleteAll();
+  const handleTasksDelete = () => {
+    deleteAllTasksMutation.mutate();
     closeDeleteModal();
   };
 

@@ -10,13 +10,9 @@ function App() {
   const [searchInput, setSearchInput] = useState<string>(''); //tracks search input
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    tasks,
-    addNewTask,
-    updateTaskCompletion,
-    deleteAllTasksHandler,
-    deleteSingleTaskHandler,
-  } = useTaskManager();
+  const { filterTasks } = useTaskManager();
+
+  const filteredTasks = filterTasks(searchInput);
 
   const openDeleteModal = () => {
     setIsModalOpen(true);
@@ -30,28 +26,17 @@ function App() {
     setSearchInput(e.target.value);
   };
 
-  //Handle search filtering of tasks
-  const filteredTasks = tasks.filter((task) => {
-    if (searchInput === '') {
-      return task;
-    }
-    const lowerCasedSearch = searchInput.toLowerCase();
-    const taskContent = task.task.toLowerCase();
-    return taskContent.includes(lowerCasedSearch);
-  });
-
   return (
     <main>
       <DeleteModalContainer
         isModalOpen={isModalOpen}
         closeDeleteModal={closeDeleteModal}
-        deleteAll={deleteAllTasksHandler}
-        tasks={tasks}
+        tasks={filteredTasks}
       />
       <div className="w-full h-full mx-auto max-w-7xl p-4">
         <HeaderUI openDeleteModal={openDeleteModal} />
         <section className="flex flex-col md:flex-row gap-8 md:gap-20 lg:gap-40 mb-12">
-          <AddTaskContainer addNew={addNewTask} />
+          <AddTaskContainer />
           <input
             className="w-full border border-black rounded-md p-2"
             placeholder="Search.."
@@ -62,11 +47,7 @@ function App() {
             value={searchInput}
           />
         </section>
-        <TaskListContainer
-          tasks={filteredTasks}
-          updateTaskCompletion={updateTaskCompletion}
-          deleteSingleTaskHandler={deleteSingleTaskHandler}
-        />
+        <TaskListContainer tasks={filteredTasks} />
       </div>
     </main>
   );

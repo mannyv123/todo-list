@@ -1,23 +1,29 @@
 import { Task } from '../utils/types';
 import TaskItemUI from './TaskItemUI/TaskItemUI';
+import { useTaskManager } from '../hooks/useTaskManager';
 
 interface TaskItemContainerProps {
   task: Task;
-  updateTaskCompletion: (taskId: string) => Promise<void>;
-  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
-function TaskItemContainer({
-  task,
-  updateTaskCompletion,
-  deleteSingleTaskHandler,
-}: TaskItemContainerProps) {
+function TaskItemContainer({ task }: TaskItemContainerProps) {
+  const { updateTaskCompletionMutation, deleteSingleTaskMutation } =
+    useTaskManager();
+
+  const handleTaskCompletionChange = (taskId: string) => {
+    updateTaskCompletionMutation.mutate(taskId);
+  };
+
+  const handleSingleTaskDelete = (taskId: string) => {
+    deleteSingleTaskMutation.mutate(taskId);
+  };
+
   return (
     <>
       <TaskItemUI
         task={task}
-        handleTaskCompletionChange={updateTaskCompletion}
-        handleSingleTaskDelete={deleteSingleTaskHandler}
+        handleTaskCompletionChange={handleTaskCompletionChange}
+        handleSingleTaskDelete={handleSingleTaskDelete}
       />
     </>
   );

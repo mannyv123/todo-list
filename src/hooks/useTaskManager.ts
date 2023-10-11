@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Task } from '../utils/types';
 import {
   addTask,
   deleteAllTasks,
@@ -7,69 +5,182 @@ import {
   getTasks,
   updateTask,
 } from '../utils/api';
-
-//Fetch tasks from API
-const fetchTasks = async (updateTaskData: Dispatch<SetStateAction<Task[]>>) => {
-  try {
-    const tasksData = await getTasks();
-    updateTaskData(tasksData);
-  } catch (err) {
-    console.error('Error fetching tasks: ', err);
-  }
-};
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Task } from '../utils/types';
 
 export function useTaskManager() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    void fetchTasks(setTasks); //Pass the setTasks function as a callback
-  }, []);
-
-  //Add a new task
-  const addNewTask = async (taskDescription: string) => {
-    try {
-      await addTask(taskDescription);
-      await fetchTasks(setTasks);
-    } catch (err) {
-      console.error('Error adding task: ', err);
-    }
+  //function to snapshot original state of tasks data before optimistically updating
+  const prevTasksState = () => {
+    return queryClient.getQueryData<Task[]>(['tasks']);
   };
 
-  //Update task completion status
-  const updateTaskCompletion = async (taskId: string) => {
-    try {
-      await updateTask(taskId);
-      await fetchTasks(setTasks);
-    } catch (err) {
-      console.error('Error adding task: ', err);
-    }
+  //Query to get all tasks
+  const tasksQuery = useQuery({
+    queryKey: ['tasks'],
+    queryFn: getTasks,
+  });
+
+  const filterTasks = (searchInput: string) => {
+    const filteredTaskData = tasksQuery?.data?.filter((task) => {
+      if (searchInput === '') {
+        return task;
+      }
+
+      const lowerCasedSearch = searchInput.toLowerCase();
+      const taskContent = task.task.toLowerCase();
+
+      return taskContent.includes(lowerCasedSearch);
+    });
+
+    return filteredTaskData ? filteredTaskData : [];
   };
 
-  // Delete all tasks
-  const deleteAllTasksHandler = async () => {
-    try {
-      await deleteAllTasks();
-      setTasks([]);
-    } catch (err) {
-      console.error('Error deleting all task: ', err);
-    }
-  };
+  //Query to create new task
+  const createTaskMutation = useMutation({
+    mutationFn: addTask,
+    onMutate: async (newTask: string) => {
+      //Cancel any outgoing refetches (so that they don't overwrite the optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
 
-  // Delete a single task
-  const deleteSingleTaskHandler = async (taskId: string) => {
-    try {
-      await deleteSingleTask(taskId);
-      await fetchTasks(setTasks);
-    } catch (err) {
-      console.error('Error deleting task: ', err);
-    }
-  };
+      //Snapshot the previous value
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to the new value
+      if (previousTasks) {
+        const newTaskObj: Task = {
+          _id: Math.random().toString(),
+          task: newTask,
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+
+        const updatedTasks: Task[] = [...previousTasks, newTaskObj];
+        updatedTasks.sort((a, b) => {
+          const taskA = a.task.toLocaleLowerCase();
+          const taskB = b.task.toLocaleLowerCase();
+
+          if (taskA < taskB) {
+            return -1;
+          }
+          if (taskA > taskB) {
+            return 1;
+          }
+          return 0;
+        });
+
+        queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
+
+        return { previousTasks };
+      }
+    },
+
+    //If the mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  //Query to update task completion status
+  const updateTaskCompletionMutation = useMutation({
+    mutationFn: updateTask,
+    onMutate: async (taskId: string) => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot previous value
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to new value
+      const updatedTasks = previousTasks?.map((task) =>
+        task._id === taskId
+          ? { ...task, completed: !task.completed, updatedAt: new Date() }
+          : task,
+      );
+
+      queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
+
+      return { previousTasks };
+    },
+    //If mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  //Query to delete all tasks
+  const deleteAllTasksMutation = useMutation({
+    mutationFn: deleteAllTasks,
+    onMutate: async () => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot the previous tasks
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to delete all tasks
+      queryClient.setQueryData<Task[]>(['tasks'], []);
+
+      return { previousTasks };
+    },
+    //If mutation fails, use the context returned from onMutate to roll back data
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    //Always refetch after error or success
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  //Query to delete specific task
+  const deleteSingleTaskMutation = useMutation({
+    mutationFn: deleteSingleTask,
+    onMutate: async (taskId: string) => {
+      //Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      //Snapshot the previous tasks data
+      const previousTasks = prevTasksState();
+
+      //Optimistically update to the new data
+      const updatedTasks = previousTasks?.filter((task) => taskId !== task._id);
+      queryClient.setQueryData<Task[]>(['tasks'], updatedTasks);
+
+      return { previousTasks };
+    },
+    onError: (_err, _variables, context) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData<Task[]>(['tasks'], context.previousTasks);
+      }
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries(['tasks']);
+    },
+  });
 
   return {
-    tasks,
-    addNewTask,
-    updateTaskCompletion,
-    deleteAllTasksHandler,
-    deleteSingleTaskHandler,
+    filterTasks,
+    createTaskMutation,
+    updateTaskCompletionMutation,
+    deleteAllTasksMutation,
+    deleteSingleTaskMutation,
   };
 }

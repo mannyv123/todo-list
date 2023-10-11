@@ -3,20 +3,17 @@ import TaskListUI from '../TaskListUI/TaskListUI';
 
 interface TaskListContainerProps {
   tasks: Task[];
-  updateTaskCompletion: (taskId: string) => Promise<void>;
-  deleteSingleTaskHandler: (taskId: string) => Promise<void>;
 }
 
 //Helper function to filter tasks by completion status
-const filterTasksByCompletionStatus = (tasks: Task[], completed: boolean) => {
+const filterTasksByCompletionStatus = (
+  tasks: Task[] = [],
+  completed: boolean,
+) => {
   return tasks.filter((task) => task.completed === completed);
 };
 
-function TaskListContainer({
-  tasks,
-  updateTaskCompletion,
-  deleteSingleTaskHandler,
-}: TaskListContainerProps) {
+function TaskListContainer({ tasks }: TaskListContainerProps) {
   //Filter for incompleted tasks
   const incompletedTasks = filterTasksByCompletionStatus(tasks, false);
 
@@ -30,8 +27,6 @@ function TaskListContainer({
       <TaskListUI
         incompletedTasks={incompletedTasks}
         completedTasks={completedTasks}
-        updateTaskCompletion={updateTaskCompletion}
-        deleteSingleTaskHandler={deleteSingleTaskHandler}
       />
     </section>
   );

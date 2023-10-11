@@ -6,7 +6,7 @@ const MODAL_MESSAGES = {
 };
 
 interface DeleteModalUIProps {
-  handleDeleteAll: () => Promise<void>;
+  handleDeleteAll: () => void;
   handleCloseModal: () => void;
   hasTasks: boolean;
 }
